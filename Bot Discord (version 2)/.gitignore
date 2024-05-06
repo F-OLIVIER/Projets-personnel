@@ -1,0 +1,9 @@
+# Fichier/dossier locaux
+***node_modules
+***db.json
+***package-lock.json
+***token.json
+***credentials.json
+
+# Fichier caché
+***.env

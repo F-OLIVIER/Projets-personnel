@@ -1,0 +1,1064 @@
+@import url('https://fonts.googleapis.com/css2?family=Agbalumo&display=swap');
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("/img/background.webp");
+    background-size: 100%;
+    opacity: 0.6;
+    z-index: -1;
+}
+
+body {
+    margin: 0px;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-family: Agbalumo, sans-serif;
+}
+
+button {
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 15px;
+    font-size: 18px;
+    background-color: #fef4c3;
+    color: rgb(0, 0, 0);
+}
+
+button:hover {
+    cursor: pointer;
+    transform: translate(3px, 3px);
+    box-shadow: 0 0px 10px rgb(0, 0, 0);
+}
+
+/* --------------------------------------- */
+/* --------------- en-tête --------------- */
+/* --------------------------------------- */
+
+.bandeau {
+    width: 100%;
+    height: 150px;
+    background-color: rgb(97, 92, 79, 0.8);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 50px;
+    justify-content: center;
+    position: fixed;
+    z-index: 1;
+}
+
+.bandeauHaut {
+    width: 100%;
+    height: 75px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-size: 50px;
+    text-align: center;
+    vertical-align: middle;
+    position: fixed;
+    z-index: 1;
+}
+
+.user {
+    width: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: aquamarine;
+    position: fixed;
+    z-index: 1;
+}
+
+.UsernameBandeau {
+    font-size: 25px;
+    vertical-align: middle;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.userImg {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 150px;
+    width: 100%;
+}
+
+.Title {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 150px;
+    width: 80%;
+    z-index: 2;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    font-family: Agbalumo, sans-serif;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    cursor: pointer;
+}
+
+.Title:hover {
+    color: black;
+    text-shadow: 1px 1px 5px wheat, 0 0 1em wheat, 0 0 0.2em wheat;
+}
+
+.banner {
+    width: 12%;
+    background-image: url('/img/banner_LNB.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 100vh;
+    z-index: 1;
+}
+
+.sousBandeau {
+    padding-top: 250px;
+}
+
+.body {
+    margin: auto;
+    margin-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#error {
+    display: none;
+    margin-top: 40px;
+    height: auto;
+    padding: 20px;
+    margin-left: 19%;
+    margin-right: 19%;
+    width: 60%;
+    background-color: #fff;
+    justify-content: center;
+    text-align: center;
+    font-size: 30px;
+    color: black;
+    border-style: solid;
+    border-color: black;
+    border-radius: 50px;
+}
+
+.no-style-link {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+}
+
+#disconnect {
+    height: 150px;
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.DisconnectButton {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+/* -------------------------------------------- */
+/* --------------- NotConnected --------------- */
+/* -------------------------------------------- */
+
+.containerHomeNotConnected {
+    font-size: 30px;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+.discordConnect {
+    padding: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+}
+
+.linkDiscord {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-family: Agbalumo, sans-serif;
+    text-shadow: 1px 1px 5px black, 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.divlink {
+    margin-bottom: 20px;
+}
+
+.discordConnect img {
+    width: 250px;
+}
+
+.discordConnect:hover {
+    cursor: pointer;
+}
+
+.divinfonotconnected {
+    margin-top: 30px;
+    padding: 15px;
+    padding-left: 25px;
+    justify-content: center;
+    color: red;
+    text-shadow: 1px 1px 5px rgba(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+}
+
+.divinfonotconnected p {
+    text-align: center;
+}
+
+.divinfonotconnected li {
+    text-align: left;
+    padding-left: 30px;
+}
+
+/* --------------------------------------------- */
+/* ----------------- page /home ---------------- */
+/* --------------------------------------------- */
+
+.subContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+.subcontainerOfficier {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    background-color: rgba(0, 110, 255, 0.4);
+    border-radius: 20px;
+}
+
+.subcontainerOfficier a {
+    width: 100%;
+}
+
+.subcontainerOfficier a div {
+    width: 95%;
+    margin: 0 auto;
+    margin-bottom: 25px;
+}
+
+.titlesubcontainerOfficier {
+    font-size: 50px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    padding-bottom: 15px;
+}
+
+.buttoncharacterCard,
+.buttonCaserne,
+.buttonCreateGroup,
+.buttonAppAdmin,
+.buttonStat {
+    width: 100%;
+    padding-bottom: 5px;
+    font-size: 50px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    background-color: #5C48E0;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+/* --------------------------------------------- */
+/* --------------- page /caserne --------------- */
+/* --------------------------------------------- */
+
+.caserne {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.caserne img {
+    width: 200px;
+    height: 260px;
+    background-color: black;
+}
+
+.titlelistUnit {
+    width: 100%;
+    padding-bottom: 5px;
+    font-size: 50px;
+    text-align: center;
+    cursor: pointer;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.listUnit {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.listUnit select {
+    text-align: center;
+}
+
+.divInfanterie,
+.divDistant,
+.divCav {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    text-decoration: none;
+}
+
+.divInfanterie {
+    background-color: rgb(77, 77, 255);
+}
+
+.divDistant {
+    background-color: rgb(196, 99, 252);
+}
+
+.divCav {
+    background-color: rgb(163, 141, 43);
+}
+
+.unit {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+}
+
+.selecctLevelCaserne,
+.selecctMaitriseCaserne {
+    width: 100%;
+}
+
+.selecctMaitriseCaserne {
+    margin-top: 8px;
+}
+
+.MAJCaserne {
+    width: 50%;
+    font-size: 20px;
+    border-radius: 20px;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    background-color: rgb(254, 244, 195);
+    cursor: pointer;
+}
+
+/* ----------------------------------------------------------- */
+/* ------------- page /creategroup et /viewgroup ------------- */
+/* ----------------------------------------------------------- */
+
+.containerGroupe {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+.listInscripted {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.divinscripted {
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.divinscripted,
+.legendInscripted {
+    width: 100%;
+    background-color: #fef4c3;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 18px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.legendInscripted {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 5px;
+    color: black;
+    text-shadow: 1px 1px 5px rgba(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+}
+
+.divlistlegend {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.legendplaced,
+.Legendconnected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.inscripted {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.inscriptedtitledivuser {
+    font-size: 22px;
+    color: black;
+    text-shadow: 1px 1px 5px rgb(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 rgb(255, 254, 254);
+}
+
+.divconnected,
+.divplace {
+    width: 15px;
+}
+
+.divconnected {
+    padding-left: 10px;
+}
+
+.inscriptedinfluence {
+    width: 180px;
+}
+
+.inscriptedname,
+.inscriptedclass {
+    /* 40px = 15 + 15 + 10 (.divconnected et .divplace) */
+    width: calc((100% - 40px - 180px) / 2);
+}
+
+.divcreategroup {
+    width: 100%;
+}
+
+.creategroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.viewgroup {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.divgroup {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.divViewGroup {
+    width: 100%;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.divnamegroup {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.namegroup {
+    font-size: 30px;
+    color: black;
+    text-shadow: 1px 1px 5px rgb(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+}
+
+.divnamegroup input {
+    margin: 15px 5px 5px 15px;
+    vertical-align: middle;
+    font-size: 16px;
+    text-align: center;
+    justify-content: center;
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 15px;
+}
+
+.divuser,
+.divuserviewgroup {
+    width: 100%;
+    min-height: 15px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.divuser,
+.divuserviewgroup {
+    border-bottom: 1px solid black;
+    box-sizing: border-box;
+}
+
+.divuser {
+    width: 100%;
+    padding: 5px;
+
+}
+
+.divuser:last-child,
+.divuserviewgroup:last-child {
+    border-bottom: none;
+}
+
+
+.divuserviewgroup {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 18px;
+}
+
+.line {
+    border-bottom: 1px black solid;
+}
+
+.divuser select {
+    width: calc((100% - 35px)/5);
+    height: auto;
+    margin: 5px;
+    padding: 2px;
+    text-align: left;
+    white-space: normal;
+    word-wrap: break-word;
+    border: 2px solid white;
+    border-radius: 15px;
+}
+
+.titlename {
+    width: 18%;
+    padding-left: 20px;
+}
+
+.titleclass {
+    width: 10%;
+}
+
+
+.titleinfluence {
+    width: 15%;
+}
+
+.divnameunit {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.influenceplayer,
+.influenceUnit {
+    width: 40px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.viewtitlename {
+    width: 18%;
+    /* padding-left: 20px; */
+}
+
+.viewusername {
+    width: 20%;
+}
+
+.classplayer {
+    width: 20%;
+}
+
+.viewdivlistUnit {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    border-left: 1px black solid;
+}
+
+.unit1,
+.unit2,
+.unit3,
+.unit4 {
+    width: calc(100%/4);
+}
+
+.legendMaitrise,
+.titledivuser {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #524F61;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    border-radius: 15px;
+}
+
+.legendMaitrise {
+    width: 100%;
+    justify-content: space-around;
+    margin-bottom: 5px;
+    padding: 5px 0px 5px 0px;
+}
+
+.titledivuser {
+    margin-bottom: 10px;
+}
+
+.group1,
+.viewgroup1 {
+    background-color: #fef4c3;
+}
+
+
+.group2,
+.viewgroup2 {
+    background-color: #DAF7A6;
+}
+
+.group3,
+.viewgroup3 {
+    background-color: #FF5733;
+}
+
+.group4,
+.viewgroup4 {
+    background-color: #f98348;
+}
+
+.group5,
+.viewgroup5 {
+    background-color: #F9C74F;
+}
+
+.group6,
+.viewgroup6 {
+    background-color: #90BE6D;
+}
+
+.group7,
+.viewgroup7 {
+    background-color: #43AA8B;
+}
+
+.group8,
+.viewgroup8 {
+    background-color: #4D908E;
+}
+
+.group9,
+.viewgroup9 {
+    background-color: #577590;
+}
+
+.group10,
+.viewgroup10 {
+    background-color: #277DA1;
+}
+
+.buttonAddGroup,
+.buttonSaveGroup,
+.buttonViewGroup,
+.buttonEditGroup,
+.buttonDownloadGroup,
+.buttonDisplayInscripted,
+.buttonDisplaycreategroup {
+    margin-top: 20px;
+    width: 100%;
+    padding-bottom: 5px;
+    font-size: 50px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 15px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.buttonDisplayInscripted,
+.buttonDisplaycreategroup,
+.buttonViewGroup,
+.buttonEditGroup {
+    margin-bottom: 10px;
+    background-color: #5C48E0;
+}
+
+.buttonAddGroup,
+.buttonDownloadGroup,
+.buttonSaveGroup {
+    background-color: #E0DF48;
+}
+
+.consultOff {
+    color: black;
+    text-shadow: none;
+    border: 1px #e9ddb1 solid;
+    border-radius: 25px;
+    background-color: #fef4c3;
+}
+
+/* --------------------------------------------- */
+/* ------------ page /characterCard ------------ */
+/* --------------------------------------------- */
+
+.subcontainerProfile {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 10px;
+}
+
+.subcontainerProfile .divError {
+    font-size: 25px;
+}
+
+.divMAJ {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    margin: 10px;
+}
+
+.titlepersonnage,
+.titleinfoGvG {
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    width: 100%;
+    color: white;
+    padding: 10px;
+    padding-bottom: 20px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.personnage,
+.infoGvG {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 45%;
+    border-radius: 15px;
+    background-color: rgba(0, 68, 255, 0.6);
+    font-size: 20px;
+    text-shadow: none;
+    color: white;
+    padding: 10px;
+    padding-bottom: 25px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.listButton {
+    width: 100%;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.listButton button {
+    width: 40%;
+}
+
+.changeClass {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.personnage select,
+.personnage input {
+    border-radius: 15px;
+    border: 2px solid white;
+    margin-left: 10px;
+}
+
+.changeInfo {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    justify-content: space-around;
+}
+
+.buttonMAJpersonnage {
+    width: 100%;
+}
+
+/* --------------------------------------------- */
+/* --------------- page /AppAdmin -------------- */
+/* --------------------------------------------- */
+
+.subContainerbotEtat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 10px;
+    font-size: 25px;
+}
+
+.divError {
+    width: 100%;
+    padding: 15px;
+    color: red;
+    background-color: white;
+    border-radius: 20px;
+    margin-bottom: 20px
+}
+
+.divBotEtat,
+.divNewUnit,
+.divChangeUnit,
+.divDeleteUser,
+.divNewclass {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: rgba(0, 68, 255, 0.7);
+    border-radius: 15px;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.titleNewUnit,
+.titleChangeUnit,
+.titleChangeUnit,
+.titleDeleteUser,
+.titleNewclass,
+.botEtat,
+.buttonBotEtat {
+    width: 50%;
+}
+
+.newUnit,
+.formchangeUnit,
+.formDeleteUser,
+.formNewclass {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+.divNewUnit select,
+.divNewUnit input,
+.divChangeUnit select,
+.divChangeUnit input,
+.formDeleteUser select,
+.formDeleteUser input,
+.formNewclass input {
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    padding: 5px;
+}
+
+.maitriseUnit,
+.changemaitriseUnit {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.maitriseUnit label,
+.changemaitriseUnit label {
+    cursor: pointer;
+}
+
+#buttonConfirmDeleteUser {
+    margin-top: 5px;
+    background-color: red;
+}
+
+/* --------------------------------------------- */
+/* ----------------- page /stat ---------------- */
+/* --------------------------------------------- */
+
+.subContainerStat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin: 10px;
+    font-size: 20px;
+    border-radius: 15px;
+}
+
+.subContainerStatForSort {
+    width: 100%;
+}
+
+.statfilter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    background-color: rgba(0, 68, 255, 0.8);
+    font-size: 25px;
+    border-radius: 25px;
+    margin-bottom: 5px;
+    padding: 5px 0px 5px 0px;
+    color: black;
+    text-shadow: 1px 1px 5px rgb(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+}
+
+.statfilter button {
+    width: 20%;
+}
+
+.linefilter {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px;
+    padding-bottom: 8px;
+}
+
+.titlefilter {
+    width: 18%;
+}
+
+.buttonFilter {
+    width: 82%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.legendstat {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    background-color: rgba(0, 68, 255, 0.8);
+    border-radius: 15px;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    margin-bottom: 10px;
+    padding: 5px 0px 8px 0px;
+}
+
+.divstat {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.statuser {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: rgba(0, 68, 255, 0.45);
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    min-height: 40px;
+    border-bottom: 2px solid black;
+}
+
+.divstatwitchinfo {
+    cursor: pointer;
+}
+
+.titlelistGvGstat {
+    justify-content: center;
+    text-align: center;
+}
+
+.statinfo {
+    width: calc(100% - 20px);
+    background-color: rgba(0, 0, 0, 0.6);
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    text-align: left;
+    padding: 5px 10px 10px 10px;
+}
+
+.titlepresencediscord {
+    text-decoration: underline;
+}
+
+.presencediscord, .titlelistGvGstat {
+    margin-bottom: 20px;
+}
+
+.divTitleStat {
+    width: 100%;
+    height: 75px;
+    background-color: gray;
+    color: black;
+    text-shadow: 1px 1px 5px rgb(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+}
+
+.statconnected {
+    width: 15px;
+}
+
+.statname {
+    width: 20%;
+}
+
+.statclass {
+    width: 20%;
+}
+
+.statinfluence {
+    width: 10%;
+}
+
+.statlvl {
+    width: 10%;
+}
+
+.statnbgvg {
+    width: 15%;
+}
+
+.statlastgvg {
+    width: 23%;
+}
