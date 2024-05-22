@@ -60,6 +60,7 @@ function containerCharacterCard(data) {
         let inputlvl = createHTMLElement('input', 'newlvl');
         inputlvl.placeholder = "Nouveau level";
         inputlvl.type = 'number';
+
         changelvl.appendChild(inputlvl);
         personnage.appendChild(changelvl);
 
@@ -149,7 +150,15 @@ function majPersonnage() {
     let dataToSend = {}
     dataToSend.GameCharacter = document.getElementById('newClass').value;
     dataToSend.Lvl = document.getElementById('newlvl').value;
+    if (dataToSend.Lvl  > 10000) {
+        alert("Ce level est impossible, veuillez cooriger la valeur.");
+        return
+    }
     dataToSend.Influence = document.getElementById('newInflu').value;
+    if (dataToSend.Influence  > 1200) {
+        alert("Cet influence est impossible, veuillez cooriger la valeur.");
+        return
+    }
 
     if (dataToSend.Influence === "" && dataToSend.Lvl === "" && dataToSend.GameCharacter === "") {
         let divError = document.getElementById('divError');

@@ -39,7 +39,7 @@ func CheckUser(w http.ResponseWriter, r *http.Request, database *sql.DB) bool {
 				Expires: time.Now().Add(4380 * time.Hour), // 6 mois
 				Domain:  data.SITE_DOMAIN,
 				Path:    "/",
-				Secure:  true,
+				// Secure:  true,
 				// HttpOnly: true, // (accessible uniquement via HTTP et pas via JavaScript)
 			}
 

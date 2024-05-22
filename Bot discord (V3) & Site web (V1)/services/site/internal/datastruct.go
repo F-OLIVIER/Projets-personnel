@@ -70,8 +70,9 @@ type SendHTML struct {
 }
 
 type SaveGroup struct {
-	ListGroup []UserGroup `json:"dataToSend"`
-	Namegroup [][]string  `json:"namegroup"`
+	ListGroup  []UserGroup `json:"dataToSend"`
+	Namegroup  [][]string  `json:"namegroup"`
+	Optiontype string      `json:"optiontype"`
 }
 
 type UserGroup struct {

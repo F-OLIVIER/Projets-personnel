@@ -14,9 +14,9 @@ export function Resetsc() {
       console.error(error.message);
     }
   });
-
-  deleteListGvG(db);
   db.close();
+
+  deleteListGvG();
 }
 
 export function Resetraz() {
@@ -28,19 +28,17 @@ export function Resetraz() {
       console.error(error.message);
     }
   });
-
-  deleteListGvG(db);
   db.close();
+
+  deleteListGvG();
 }
 
 export function Resetac() {
-  // Obtenez la date actuelle avec le décalage horaire de Paris
-  const futurdateformate = moment().tz("Europe/Paris");
-  const jour = futurdateformate.day();
-  const date = futurdateformate.date();
-  const mois = futurdateformate.month();
-
-  const db = new sqlite3.Database(adressdb);
+  const dateformate = new Date();
+  const jour = dateformate.getDate().toString().padStart(2, '0');
+  const mois = (dateformate.getMonth() + 1).toString().padStart(2, '0');
+  const annee = dateformate.getFullYear();
+  const dateFrenchFormat = `${jour}/${mois}/${annee}`;
 
   const insertQuery = `INSERT INTO HistoryGvG (User_ID, DateGvG, Valid)
                         SELECT ID, ?, 
@@ -49,7 +47,7 @@ export function Resetac() {
                                   ELSE 0
                               END AS Valid
                         FROM Users
-                        WHERE MNDR >= 6 AND DiscordID = ?;`;
+                        WHERE EtatInscription = 1 AND DiscordID = ?;`;
   //Mise a jour de la table User
   const updateQuery = `UPDATE Users
                       SET
@@ -68,10 +66,12 @@ export function Resetac() {
                         EtatInscription = 0,
                         NbEmojiInscription = 0,
                         NbTotalGvG = NbTotalGvG + 1
-                      WHERE DiscordID = ?;`;
+                        WHERE DiscordID = ?;`;
+
 
   const getAllUsers = async () => {
     return new Promise((resolve, reject) => {
+      const db = new sqlite3.Database(adressdb);
       const selectQuery = `SELECT DiscordID FROM Users;`;
       db.all(selectQuery, [], (err, rows) => {
         if (err) {
@@ -81,18 +81,20 @@ export function Resetac() {
           resolve(rows);
         }
       });
+      db.close();
     });
   };
 
   getAllUsers().then((users) => {
+    const db = new sqlite3.Database(adressdb);
     let isError = false;
     for (const user of users) {
-      db.run(insertQuery, [`${jour}/${date}/${mois}`, user.DiscordID], (err1) => {
+      db.run(insertQuery, [dateFrenchFormat, user.DiscordID], (err1) => { // INSERT table HistoryGvG
         if (err1) {
           console.log("err1 getAllUsers (Resetac) : ", err1);
           isError = true;
         } else {
-          db.run(updateQuery, [`${jour}/${date}/${mois}`, user.DiscordID], (err2) => {
+          db.run(updateQuery, [dateFrenchFormat, user.DiscordID], (err2) => { // UPDATE table users
             if (err2) {
               console.log("err2 getAllUsers (Resetac) : ", err2);
               isError = true;
@@ -104,21 +106,22 @@ export function Resetac() {
         break;
       }
     }
+    db.close();
   }).catch((error) => {
     console.error(error);
   });
 
-  deleteListGvG(db);
-  db.close();
+  deleteListGvG();
 }
 
-function deleteListGvG(db) {
-  const sql = "DELETE FROM GroupeGvG";
-  db.run(updateQuery, function (error) {
+function deleteListGvG() {
+  const db = new sqlite3.Database(adressdb);
+  db.run("DELETE FROM GroupGvG", function (error) {
     if (error) {
       console.error(error.message);
     }
   });
+  db.close();
 }
 
 

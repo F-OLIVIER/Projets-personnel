@@ -189,8 +189,13 @@ button:hover {
     flex-direction: column;
     text-align: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 25px;
+}
+
+.discordConnect:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    border: 1px solid white;
 }
 
 .linkDiscord {
@@ -219,7 +224,7 @@ button:hover {
     justify-content: center;
     color: red;
     text-shadow: 1px 1px 5px rgba(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 25px;
 }
 
@@ -280,8 +285,17 @@ button:hover {
     cursor: pointer;
     border-radius: 15px;
     margin-bottom: 25px;
-    background-color: #5C48E0;
+    background-color: rgb(92, 72, 224);
     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.buttoncharacterCard:hover,
+.buttonCaserne:hover,
+.buttonCreateGroup:hover,
+.buttonAppAdmin:hover,
+.buttonStat:hover {
+    background-color: rgb(92, 72, 224, 0.8);
+    border: 1px solid white;
 }
 
 /* --------------------------------------------- */
@@ -335,12 +349,27 @@ button:hover {
     background-color: rgb(77, 77, 255);
 }
 
+#titleInfanterie:hover {
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
 .divDistant {
     background-color: rgb(196, 99, 252);
 }
 
+#titleDistant:hover {
+    border: 1px solid white;
+    border-radius: 15px;
+}
+
 .divCav {
     background-color: rgb(163, 141, 43);
+}
+
+#titleCav:hover {
+    border: 1px solid white;
+    border-radius: 15px;
 }
 
 .unit {
@@ -552,7 +581,7 @@ button:hover {
 
 .divuser select {
     width: calc((100% - 35px)/5);
-    height: auto;
+    height: 40px;
     margin: 5px;
     padding: 2px;
     text-align: left;
@@ -560,6 +589,10 @@ button:hover {
     word-wrap: break-word;
     border: 2px solid white;
     border-radius: 15px;
+}
+
+.divuser select option {
+    overflow-wrap: break-word;
 }
 
 .titlename {
@@ -693,6 +726,7 @@ button:hover {
 
 .buttonAddGroup,
 .buttonSaveGroup,
+.buttonGroupType,
 .buttonViewGroup,
 .buttonEditGroup,
 .buttonDownloadGroup,
@@ -713,13 +747,37 @@ button:hover {
 .buttonViewGroup,
 .buttonEditGroup {
     margin-bottom: 10px;
-    background-color: #5C48E0;
+    background-color: rgb(92, 72, 224);
+}
+
+.buttonDisplayInscripted:hover,
+.buttonDisplaycreategroup:hover,
+.buttonViewGroup:hover,
+.buttonEditGroup:hover {
+    background-color: rgb(92, 72, 224, 0.8);
+    border: 1px solid white;
 }
 
 .buttonAddGroup,
 .buttonDownloadGroup,
 .buttonSaveGroup {
-    background-color: #E0DF48;
+    background-color: rgb(224, 223, 72);
+}
+
+.buttonAddGroup:hover,
+.buttonDownloadGroup:hover,
+.buttonSaveGroup:hover {
+    background-color: rgb(224, 223, 72, 0.8);
+    border: 1px solid white;
+}
+
+.buttonGroupType {
+    background-color: rgb(51, 250, 233);
+}
+
+.buttonGroupType:hover {
+    background-color: rgb(51, 250, 233, 0.8);
+    border: 1px solid white;
 }
 
 .consultOff {
@@ -728,6 +786,59 @@ button:hover {
     border: 1px #e9ddb1 solid;
     border-radius: 25px;
     background-color: #fef4c3;
+}
+
+.divGroupType {
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #33fae9;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    border-radius: 20px;
+}
+
+.divGroupType p {
+    text-align: left;
+    padding-left: 40px;
+    font-size: large;
+}
+
+.divSave,
+.divCharger {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0, 0, 0, 0.2);
+    margin: 10px;
+    border-radius: 25px;
+}
+
+.saveGroupType,
+.chargerGroupType {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-bottom: 15px;
+}
+
+.buttonSaveGroupTypeAtt,
+.buttonSaveGroupTypeDef,
+.buttonChargerGroupTypeAtt,
+.buttonChargerGroupTypeDef {
+    width: 25%;
+    background-color: rgb(92, 72, 224);
+    border-radius: 25px;
+    padding: 10px;
+    font-size: large;
+    cursor: pointer;
+}
+
+.buttonSaveGroupTypeAtt:hover,
+.buttonSaveGroupTypeDef:hover,
+.buttonChargerGroupTypeAtt:hover,
+.buttonChargerGroupTypeDef:hover {
+    background-color: rgb(92, 72, 224, 0.8);
+    border: 1px solid white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
 
 /* --------------------------------------------- */
@@ -846,14 +957,29 @@ button:hover {
 .divDeleteUser,
 .divNewclass {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    background-color: rgba(0, 68, 255, 0.7);
+    flex-direction: column;
+    justify-content: center;
     border-radius: 15px;
     width: 100%;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+}
+
+.divBotEtat {
+    background-color: rgba(0, 68, 255, 0.7);
+}
+
+.divNewUnit {
+    background-color: rgb(0, 128, 0, 0.7);
+}
+
+.divChangeUnit {
+    background-color: rgba(0, 68, 255, 0.7);
+}
+
+.divNewclass {
+    background-color: rgb(0, 128, 0, 0.7);
 }
 
 .titleNewUnit,
@@ -863,14 +989,20 @@ button:hover {
 .titleNewclass,
 .botEtat,
 .buttonBotEtat {
-    width: 50%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.explicationbotetat {
+    font-size: medium;
+    margin-bottom: 10px;
 }
 
 .newUnit,
 .formchangeUnit,
 .formDeleteUser,
 .formNewclass {
-    width: 50%;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -960,6 +1092,8 @@ button:hover {
 
 .titlefilter {
     width: 18%;
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
 
 .buttonFilter {
@@ -1023,7 +1157,8 @@ button:hover {
     text-decoration: underline;
 }
 
-.presencediscord, .titlelistGvGstat {
+.presencediscord,
+.titlelistGvGstat {
     margin-bottom: 20px;
 }
 
@@ -1031,8 +1166,8 @@ button:hover {
     width: 100%;
     height: 75px;
     background-color: gray;
-    color: black;
-    text-shadow: 1px 1px 5px rgb(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
 
 .statconnected {

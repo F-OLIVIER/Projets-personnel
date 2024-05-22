@@ -20,7 +20,7 @@ export function cronCheckpresence() {
       // ID des channels à checker pour les présences pendant la GvG
       CurrentChan.members.forEach(function (CurrentMember) {
         if (isMember(CurrentMember.user.id)) {
-          console.log("id :", CurrentMember.user.id, ", username :", CurrentMember.user.username);
+          // console.log("id :", CurrentMember.user.id, ", username :", CurrentMember.user.username);
           db.run(updateQuery, [CurrentMember.user.id], function (error) {
             if (error) {
               console.error(error.message);
@@ -37,7 +37,7 @@ export function cronCheckpresence() {
 export async function cronResetMsgReaction(BotReaction) {
   const CurrentDate = new Date(Date.now() + (moment().tz("Europe/Paris").utcOffset() * 60 * 1000));
   var Allumage = await etatmsgGvG();
-  if (Allumage == "on") {
+  if (Allumage[0].Allumage === 0) {
 
     // gestion de la date futur pour le message
     const now = moment();
@@ -49,6 +49,8 @@ export async function cronResetMsgReaction(BotReaction) {
       futurdate = moment().add(4, 'days');
     } else if (day == 6) { // Cronjob du samedi (jour 6)
       futurdate = moment().add(3, 'days');
+    } else {
+      console.log('Day 2 ou 6 non présent, mauvais reset');
     }
 
     // génére la date au bon format
@@ -60,7 +62,7 @@ export async function cronResetMsgReaction(BotReaction) {
 
     // Suppression du message d'inscription GvG
     var id_msg = await IDmsgGvG();
-    client.channels.cache.get(TODOBotReaction).messages.fetch(id_msg).then(message => message.delete());
+    client.channels.cache.get(TODOBotReaction).messages.fetch(id_msg[0].IDMessageGvG).then(message => message.delete());
     Resetac();
     msgreactgvg(BotReaction, jour, mois, date);
   } else {

@@ -1,5 +1,5 @@
 import { adressAPI } from "./config.js";
-import { communBlock, createHTMLElement, fetchServer, fetchlogout } from "./useful.js";
+import { communBlock, createHTMLElement, fetchServer, fetchlogout, removeHTMLTags } from "./useful.js";
 
 export async function administration() {
     containerAppAdmin(await fetchServer('CheckAppAdmin'));
@@ -23,11 +23,15 @@ function containerAppAdmin(data) {
             buttonBotEtat.value = "false";
             buttonBotEtat.textContent = 'Désactiver les fonctions automatique';
         } else {
-            botEtat.textContent = "Fonction automatique du bot discord inactif";
+            botEtat.textContent = "Fonction automatique (reset en fin de GvG) du bot discord inactif";
             buttonBotEtat.value = "true";
             buttonBotEtat.textContent = 'Activer les fonctions automatique';
         }
         divBotEtat.appendChild(botEtat);
+        let explication = createHTMLElement('div', 'explicationbotetat');
+        explication.textContent = '(changement du message GvG + calcul des statistique gvg + re-initialisation des groupes en fin de GvG)';
+        divBotEtat.appendChild(explication);
+
         divBotEtat.appendChild(buttonBotEtat);
         subContainer.appendChild(divBotEtat);
 
@@ -414,13 +418,13 @@ async function adminitrateBot(option) {
 
     // activate or desactivate bot
     if (option === 'buttonBotEtat') {
-        dataToSend.Allumage = document.getElementById('buttonBotEtat').value; // false = desactivation, true = activation
+        dataToSend.Allumage = removeHTMLTags(document.getElementById('buttonBotEtat').value); // false = desactivation, true = activation
         sendData(dataToSend);
-    } else if (option === 'buttonConfirmDeleteUser') { // suppression d'un utilisateur
-        dataToSend.DeleteUser = document.getElementById('selectDeleteUser').value;
-        sendData(dataToSend);
+    // } else if (option === 'buttonConfirmDeleteUser') { // suppression d'un utilisateur
+        // dataToSend.DeleteUser = document.getElementById('selectDeleteUser').value;
+        // sendData(dataToSend);
     } else if (option === 'buttonNewclass') {
-        dataToSend.newWeapon = document.getElementById('nameNewclass').value;
+        dataToSend.newWeapon = removeHTMLTags(document.getElementById('nameNewclass').value);
         sendData(dataToSend);
     } else {
         let formData = new FormData();
@@ -428,9 +432,9 @@ async function adminitrateBot(option) {
         // create Unit
         if (option === 'buttonNewUnit') {
             let createUnit = {};
-            createUnit.Unit_name = document.getElementById('nameNewUnit').value;
-            createUnit.Unit_influence = document.getElementById('influNewUnit').value;
-            createUnit.Unit_lvlMax = document.getElementById('lvlMaxNewUnit').value;
+            createUnit.Unit_name = removeHTMLTags(document.getElementById('nameNewUnit').value);
+            createUnit.Unit_influence = removeHTMLTags(document.getElementById('influNewUnit').value);
+            createUnit.Unit_lvlMax = removeHTMLTags(document.getElementById('lvlMaxNewUnit').value);
             createUnit.Unit_tier = document.getElementById('tierNewUnit').value;
             createUnit.Unit_type = document.getElementById('typeNewUnit').value;
             createUnit.Unit_maitrise = checkedRadioValue_Unit_maitrise;
@@ -473,9 +477,9 @@ async function adminitrateBot(option) {
         // change Unit
         if (option === 'buttonChangeUnit') {
             let changeUnit = {};
-            changeUnit.Unit_name = document.getElementById('selectChangeUnit').value;
-            changeUnit.Unit_influence = document.getElementById('changeUnitInfluence').value;
-            changeUnit.Unit_lvlMax = document.getElementById('changeUnitLvlMax').value;
+            changeUnit.Unit_name = removeHTMLTags(document.getElementById('selectChangeUnit').value);
+            changeUnit.Unit_influence = removeHTMLTags(document.getElementById('changeUnitInfluence').value);
+            changeUnit.Unit_lvlMax = removeHTMLTags(document.getElementById('changeUnitLvlMax').value);
             // changeUnit.Unit_tier = document.getElementById('changeUnitTier').value;
             const checkboxChangeUnitMaitrise = document.getElementById('changeUnitMaitrise');
             if (checkboxChangeUnitMaitrise.checked) {

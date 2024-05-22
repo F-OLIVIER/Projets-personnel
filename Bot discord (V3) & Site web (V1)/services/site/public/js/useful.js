@@ -93,3 +93,8 @@ export function fetchlogout() {
         });
     window.location.href = '/';
 }
+
+// Fonction pour eviter les balises/injections
+export function removeHTMLTags(input) {
+    return input.replace(/<\/?[^>]+(>|$)/g, "");
+}

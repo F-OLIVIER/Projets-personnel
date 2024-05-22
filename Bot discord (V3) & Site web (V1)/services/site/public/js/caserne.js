@@ -17,7 +17,7 @@ function containercaserne(data) {
         let TitleDivInfanterie = document.createElement('div');
         TitleDivInfanterie.id = 'titleInfanterie';
         TitleDivInfanterie.classList.add("titlelistUnit");
-        TitleDivInfanterie.textContent = "Infanterie"
+        TitleDivInfanterie.textContent = "》Infanterie"; // ︾
         let listUnitInfanterie = document.createElement('div');
         listUnitInfanterie.classList.add("listUnit");
         listUnitInfanterie.style.display = 'none';
@@ -26,7 +26,7 @@ function containercaserne(data) {
         let TitleDivDistant = document.createElement('div');
         TitleDivDistant.id = 'titleDistant';
         TitleDivDistant.classList.add("titlelistUnit");
-        TitleDivDistant.textContent = "Distant"
+        TitleDivDistant.textContent = "》Distant"; // ︾
         let listUnitDistant = document.createElement('div');
         listUnitDistant.classList.add("listUnit");
         listUnitDistant.style.display = 'none';
@@ -35,7 +35,7 @@ function containercaserne(data) {
         let TitleDivCav = document.createElement('div');
         TitleDivCav.id = 'titleCav';
         TitleDivCav.classList.add("titlelistUnit");
-        TitleDivCav.textContent = "Cavalerie"
+        TitleDivCav.textContent = "》Cavalerie"; // ︾
         let listUnitCav = document.createElement('div');
         listUnitCav.classList.add("listUnit");
         listUnitCav.style.display = 'none';
@@ -53,8 +53,10 @@ function containercaserne(data) {
             if (now - timerThrottlebutton > 500) {
                 timerThrottlebutton = now;
                 if (listUnitInfanterie.style.display === 'none') {
+                    TitleDivInfanterie.textContent = "︾ Infanterie";
                     listUnitInfanterie.style.display = 'flex';
                 } else {
+                    TitleDivInfanterie.textContent = "》Infanterie";
                     listUnitInfanterie.style.display = 'none';
                 }
             }
@@ -68,8 +70,10 @@ function containercaserne(data) {
             if (now - timerThrottlebutton > 500) {
                 timerThrottlebutton = now;
                 if (listUnitDistant.style.display === 'none') {
+                    TitleDivDistant.textContent = "︾ Distant";
                     listUnitDistant.style.display = 'flex';
                 } else {
+                    TitleDivDistant.textContent = "》Distant";
                     listUnitDistant.style.display = 'none';
                 }
             }
@@ -83,8 +87,10 @@ function containercaserne(data) {
             if (now - timerThrottlebutton > 500) {
                 timerThrottlebutton = now;
                 if (listUnitCav.style.display === 'none') {
+                    TitleDivCav.textContent = "︾ Cavalerie";
                     listUnitCav.style.display = 'flex';
                 } else {
+                    TitleDivCav.textContent = "》Cavalerie";
                     listUnitCav.style.display = 'none';
                 }
             }
@@ -173,7 +179,7 @@ function addUnit(data, listUnitInfanterie, listUnitDistant, listUnitCav, tier) {
 
             // Ajout de la maitrise
             if (Currentunit.Unit_maitrise === '1') { // presence d'une maitrise sur l'unité
-                const listoption = [["", "Maîtrise non démarré", 'red'], ["1", "Maitrise en cours", 'orange'], ["2", "Maitrise compléte", 'green']];
+                const listoption = [["0", "Maîtrise non démarré", 'red'], ["1", "Maitrise en cours", 'orange'], ["2", "Maitrise compléte", 'green']];
                 let selecctMaitrise = document.createElement('select');
                 selecctMaitrise.className = 'selecctMaitriseCaserne';
                 selecctMaitrise.name = "Unit" + Currentunit.Unit_id;

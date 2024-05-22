@@ -191,7 +191,15 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 
 				case "/api/creategroup":
 					sendHTML.ListInscripted = utils.ListInscriptedUsers(database)
-					sendHTML.GroupGvG = utils.GroupGvG(database)
+					sendHTML.GroupGvG = utils.GroupGvG(database, "GroupGvG")
+					sendHTML.NameGroupGvG = utils.NameGroupGvG(database)
+				case "/api/chargergrouptypeatt":
+					sendHTML.ListInscripted = utils.ListInscriptedUsers(database)
+					sendHTML.GroupGvG = utils.GroupGvG(database, "GroupTypeAtt")
+					sendHTML.NameGroupGvG = utils.NameGroupGvG(database)
+				case "/api/chargergrouptypedef":
+					sendHTML.ListInscripted = utils.ListInscriptedUsers(database)
+					sendHTML.GroupGvG = utils.GroupGvG(database, "GroupTypeDef")
 					sendHTML.NameGroupGvG = utils.NameGroupGvG(database)
 
 				case "/api/caserne":

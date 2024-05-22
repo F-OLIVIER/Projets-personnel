@@ -138,8 +138,8 @@ func ListInscriptedUsers(database *sql.DB) (UsersIncripted []data.UserInfo) {
 	return UsersIncripted
 }
 
-func GroupGvG(database *sql.DB) (listUserAlreadyRegistered []data.UserGvG) {
-	listUnit, err := database.Prepare(`SELECT User_ID, GroupNumber, Unit1, Unit2, Unit3, Unit4 FROM GroupGvG`)
+func GroupGvG(database *sql.DB, nameTable string) (listUserAlreadyRegistered []data.UserGvG) {
+	listUnit, err := database.Prepare("SELECT User_ID, GroupNumber, Unit1, Unit2, Unit3, Unit4 FROM " + nameTable)
 	CheckErr("1- Requete DB fonction GroupGvG", err)
 	rows, err := listUnit.Query()
 	CheckErr("2- Requete DB fonction GroupGvG", err)
@@ -236,6 +236,12 @@ func UpdateAdministration(r *http.Request, database *sql.DB) {
 			_, err = stmtCaserne.Exec(existID)
 			CheckErr("Execute delete statement UpdateAdministration", err)
 
+			// supression de l'utilisateur dans la table CaserneMaitrise
+			stmtCaserneMaitrise, err := database.Prepare("DELETE FROM CaserneMaitrise WHERE User_ID = ?")
+			CheckErr("Delete User UpdateAdministration ", err)
+			_, err = stmtCaserneMaitrise.Exec(existID)
+			CheckErr("Execute delete statement UpdateAdministration", err)
+
 			// la suppression de l'utilisateur dans la table GroupGvG (si present) sera automatique au prochain reset
 		}
 	} else if data.NewWeapon != "" { // ajout d'une nouvelle arme de héros
@@ -294,9 +300,15 @@ func createNewUnit(dataCreateUnit data.Unit, filepath string, database *sql.DB) 
 	stmtNbColum.QueryRow().Scan(&nbColum)
 
 	if nbColum > 0 {
-		stmtColum, err := database.Prepare(`ALTER TABLE Caserne ADD COLUMN ? INTEGER DEFAULT "";`)
+		// ajout de la colonne dans la table Caserne
+		stmtColumCaserne, err := database.Prepare(`ALTER TABLE Caserne ADD COLUMN ? INTEGER DEFAULT 0;`)
 		CheckErr("3- ALTER TABLE createNewUnit ", err)
-		stmtColum.Exec("Unit" + string(nbColum-1))
+		stmtColumCaserne.Exec("Unit" + string(nbColum-1))
+
+		// ajout de la colonne dans la table CaserneMaitrise
+		stmtColumCaserneMaitrise, err := database.Prepare(`ALTER TABLE CaserneMaitrise ADD COLUMN ? INTEGER DEFAULT 0;`)
+		CheckErr("3- ALTER TABLE createNewUnit ", err)
+		stmtColumCaserneMaitrise.Exec("Unit" + string(nbColum-1))
 	}
 }
 

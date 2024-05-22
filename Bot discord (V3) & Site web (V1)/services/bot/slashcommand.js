@@ -4,6 +4,7 @@ import { updateInflu, updateLvl, updateclass } from "./database.js";
 import { Resetac, Resetraz, Resetsc } from "./FuncRaid.js";
 import { cmdclass, cmdresetmsggvg } from "./CommandBot.js";
 import { BooleanAdmin, client } from "./Constant.js";
+import { TODOBotReaction } from "./config.js";
 
 // Module nodejs et npm
 import { } from 'dotenv/config';
@@ -245,7 +246,7 @@ export async function slashRaidReset(interaction) {
     return true
 }
 
-export async function slashResetmsggvg(interaction) {
+export async function slashResetmsggvg(BotReaction, interaction) {
     if (BooleanAdmin(interaction.user.id)) {
         cmdresetmsggvg(BotReaction, TODOBotReaction);
         Resetsc();

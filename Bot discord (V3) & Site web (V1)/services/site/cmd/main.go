@@ -26,6 +26,8 @@ func main() {
 	http.HandleFunc("/api/caserne", handlers.ApiHandler)
 	http.HandleFunc("/api/majcaserne", handlers.ApiHandler)
 	http.HandleFunc("/api/creategroup", handlers.ApiHandler)
+	http.HandleFunc("/api/chargergrouptypeatt", handlers.ApiHandler)
+	http.HandleFunc("/api/chargergrouptypedef", handlers.ApiHandler)
 	http.HandleFunc("/api/CheckAppAdmin", handlers.ApiHandler)
 	http.HandleFunc("/api/statGvG", handlers.ApiHandler)
 

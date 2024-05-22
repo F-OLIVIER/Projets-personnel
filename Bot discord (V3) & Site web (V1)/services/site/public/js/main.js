@@ -31,7 +31,13 @@ switch (path) {
         break;
 
     case '/creategroup':
-        creategroup();
+        creategroup('creategroup');
+        break;
+    case '/chargergrouptypeatt':
+        creategroup('chargergrouptypeatt');
+        break;
+    case '/chargergrouptypedef':
+        creategroup('chargergrouptypedef');
         break;
 
     case '/viewGroup':
@@ -81,16 +87,16 @@ function homeNotConnected() {
 
     let divinfo = document.createElement('div');
     divinfo.className = "divinfonotconnected";
-    let title =  document.createElement('p');
+    let title = document.createElement('p');
     title.textContent = "ℹ️ Vous serez redirigés vers cette page dans les cas suivants";
     divinfo.appendChild(title);
-    let cas1 =  document.createElement('li');
+    let cas1 = document.createElement('li');
     cas1.textContent = "Utilisateur non présent sur le discord associé à ce site internet";
     divinfo.appendChild(cas1);
-    let cas2 =  document.createElement('li');
+    let cas2 = document.createElement('li');
     cas2.textContent = "Utilisateur non autorisé (rôle discord non attribué)";
     divinfo.appendChild(cas2);
-    let cas3 =  document.createElement('li');
+    let cas3 = document.createElement('li');
     cas3.textContent = "Erreur de connexion";
     divinfo.appendChild(cas3);
 

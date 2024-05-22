@@ -20,7 +20,7 @@ export async function CreateOrUpdateUser(data) {
                     }
                 });
             } else {
-                NewUser(data.DiscordID)
+                NewUser(data.DiscordID);
                 // Utilisateur inexistant, effectuer l'insertion
                 const insertQuery = `INSERT INTO Users (DiscordID, DiscordName, DiscordBaseName, DiscordRole, DiscordPhoto, GameCharacter_ID, Lvl, EtatInscription, NbEmojiInscription, TrustIndicator, Influence, MNDR, NbGvGParticiped, NbTotalGvG, DateLastGvGParticiped) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
                 db.run(insertQuery, [data.DiscordID, data.DiscordName, data.DiscordBaseName, data.DiscordRole, data.DiscordPhoto, 0, 0, -1, 0, 0, 700, 0, 0, 0, "jamais / never"], function (err) {
@@ -67,7 +67,7 @@ export async function classPlay(idClass) {
     const db = new sqlite3.Database(adressdb);
     const getclassPlay = async () => {
         return new Promise((resolve, reject) => {
-            const requestQuery = `SELECT ClasseFR, ClasseEN FROM ListGameCharacter WHERE ID = ?;`;
+            const requestQuery = `SELECT ClasseFR FROM ListGameCharacter WHERE ID = ?;`;
             db.all(requestQuery, idClass, (err, rows) => {
                 if (err) {
                     reject(err);

@@ -4,6 +4,7 @@ import (
 	data "botgvg/internal"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -13,8 +14,27 @@ func SaveCreateGroup(r *http.Request, database *sql.DB) {
 	err := json.NewDecoder(r.Body).Decode(&listGroup)
 	CheckErr("Erreur de décodage JSON SaveCreateGroup", err)
 
+	fmt.Println("listGroup.Optiontype : ", listGroup.Optiontype)
+
+	// Optiontype possible : "current" "SaveGroupTypeAtt" "SaveGroupTypeDef"
+	var requestDeleteDB, requestInsertDB string
+	switch listGroup.Optiontype {
+	case "current":
+		requestDeleteDB = "DELETE FROM GroupGvG"
+		requestInsertDB = "INSERT INTO GroupGvG (User_ID,GroupNumber,Unit1,Unit2,Unit3,Unit4) Values(?,?,?,?,?,?)"
+	case "SaveGroupTypeAtt":
+		requestDeleteDB = "DELETE FROM GroupTypeAtt"
+		requestInsertDB = "INSERT INTO GroupTypeAtt (User_ID,GroupNumber,Unit1,Unit2,Unit3,Unit4) Values(?,?,?,?,?,?)"
+	case "SaveGroupTypeDef":
+		requestDeleteDB = "DELETE FROM GroupTypeDef"
+		requestInsertDB = "INSERT INTO GroupTypeDef (User_ID,GroupNumber,Unit1,Unit2,Unit3,Unit4) Values(?,?,?,?,?,?)"
+	default:
+		fmt.Println("Probléme 'Optiontype' saveDB")
+		return
+	}
+
 	// Update List Group GvG
-	stmt1, errdb := database.Prepare("DELETE FROM GroupGvG")
+	stmt1, errdb := database.Prepare(requestDeleteDB)
 	CheckErr("1- DELETE - Requete DB SaveCreateGroup", errdb)
 	stmt1.Exec()
 
@@ -68,7 +88,7 @@ func SaveCreateGroup(r *http.Request, database *sql.DB) {
 
 			if username_ID != 0 {
 				groupNumber := strings.Replace(currentline.NameGroup, "group", "", 1)
-				stmt2, errdb := database.Prepare("INSERT INTO GroupGvG (User_ID,GroupNumber,Unit1,Unit2,Unit3,Unit4) Values(?,?,?,?,?,?)")
+				stmt2, errdb := database.Prepare(requestInsertDB)
 				CheckErr("2- INSERT - Requete DB SaveCreateGroup", errdb)
 				stmt2.Exec(username_ID, groupNumber, unit1, unit2, unit3, unit4)
 

@@ -1,7 +1,7 @@
 // Fichier annexe
 import { TODOBotChan, TODOBotChanOfficier, TODOBotReaction, siteInternet, idRoleUser, idRoleOfficier } from './config.js';
 import { slashvisite, visit1, modalvisitelvlAndInflu, visit2, visit3, slashvisitenotpossible } from './guide.js';
-import { createCommands, slashClass, slashInflu, slashLevel, slashResetmsggvg } from './slashcommand.js';
+import { createCommands, slashClass, slashInflu, slashLevel, slashRaidReset, slashResetmsggvg } from './slashcommand.js';
 import { botOn, unregisteredList, isOfficier, deleteUser } from './database.js';
 import { PlayerCreateOrUpdate, createuser, isMember } from './FuncData.js';
 import { client, Messagegvg, EmbedData, EmbedGuide } from './Constant.js';
@@ -158,6 +158,9 @@ client.on("messageReactionRemove", async (reaction, user) => {
 // ---------------------- Message command -----------------------
 // --------------------------------------------------------------
 client.on('messageCreate', async message => {
+
+  const BotReaction = client.channels.cache.get(TODOBotReaction);
+  
   if (message.author.bot) return;
   var MC = message.content.toLowerCase();
   var AuthorID = message.author.id;
@@ -165,9 +168,10 @@ client.on('messageCreate', async message => {
   if (!await isMember(AuthorID)) return;
 
   // Fonction de test
-  // if (MC.startsWith("/test")){
-  //     message.delete();
-  // }
+  if (MC.startsWith("/test")) {
+    cronResetMsgReaction(BotReaction);
+    message.delete();
+  }
 
 });
 
@@ -322,7 +326,8 @@ client.on('interactionCreate', async (interaction) => {
   }
 
   if (interaction.commandName === "admin_resetmsggvg") {
-    return await slashResetmsggvg(interaction);
+    const BotReaction = client.channels.cache.get(TODOBotReaction);
+    return await slashResetmsggvg(BotReaction, interaction);
   }
 });
 

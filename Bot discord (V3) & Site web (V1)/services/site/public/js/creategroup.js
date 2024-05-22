@@ -1,7 +1,7 @@
 import { adressAPI } from "./config.js";
 import { communBlock, createHTMLElement, fetchServer, fetchlogout } from "./useful.js";
 
-export async function creategroup() {
+export async function creategroup(option) {
     containercreategroup(await fetchServer('creategroup'));
 }
 
@@ -23,7 +23,7 @@ export async function containercreategroup(data) {
 
         // Boutton pour afficher l'encart de création des groupes
         let buttonDisplaycreategroup = await createHTMLElement('div', 'buttonDisplaycreategroup');
-        buttonDisplaycreategroup.textContent = 'Création des groupes GvG';
+        buttonDisplaycreategroup.textContent = '》Création des groupes GvG'; //︾
         containerGroupe.appendChild(buttonDisplaycreategroup);
 
         // div de la création des groupes GvG
@@ -60,9 +60,10 @@ export async function containercreategroup(data) {
             MAJlistUserSelect();
         }
 
+
         // Boutton pour ajouter un groupe (5 joueurs)
         let buttonAddGroup = await createHTMLElement('div', 'buttonAddGroup');
-        buttonAddGroup.textContent = 'Ajouter un groupe';
+        buttonAddGroup.textContent = '➕ Ajouter un groupe';
         divcreategroup.appendChild(buttonAddGroup);
         buttonAddGroup.addEventListener('click', function () {
             const now = new Date();
@@ -73,17 +74,91 @@ export async function containercreategroup(data) {
             }
         });
 
-        // Boutton pour ajouter un groupe (5 joueurs)
+        // Boutton pour sauvegarder les groupes
         let buttonSaveGroup = await createHTMLElement('div', 'buttonSaveGroup');
-        buttonSaveGroup.textContent = 'Sauvegarder les groupes';
+        buttonSaveGroup.textContent = '💾 Sauvegarder les groupes';
         divcreategroup.appendChild(buttonSaveGroup);
         buttonSaveGroup.addEventListener('click', function () {
             const now = new Date();
             if (now - timerThrottlebutton > 1000) {
                 timerThrottlebutton = now;
-                saveGroup();
+                saveGroup('current');
                 window.location.href = '/creategroup';
             }
+        });
+
+        // Boutton pour les groupes
+        let buttonGroupType = await createHTMLElement('div', 'buttonGroupType');
+        buttonGroupType.textContent = '》Groupes type';
+        divcreategroup.appendChild(buttonGroupType);
+        buttonGroupType.addEventListener('click', function () {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                if (document.getElementById('divGroupType').style.display === 'none') {
+                    buttonGroupType.textContent = "︾ Groupe type"; // ︾
+                    document.getElementById('divGroupType').style.display = 'flex';
+                } else {
+                    buttonGroupType.textContent = "》Groupe type"; // ︾
+                    document.getElementById('divGroupType').style.display = 'none';
+                }
+            }
+        });
+        // Contenu pour les groupes
+        divcreategroup.appendChild(await groupType());
+
+        // événements du boutton d'affichage des inscrits
+        document.getElementById('buttonDisplayInscripted').addEventListener('click', function () {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                if (document.getElementById('divinscripted').style.display === 'none') {
+                    document.getElementById('buttonDisplayInscripted').textContent = '︾ Liste des inscrits';
+                    document.getElementById('legendInscripted').style.display = 'flex';
+                    document.getElementById('divinscripted').style.display = 'block';
+                } else {
+                    document.getElementById('buttonDisplayInscripted').textContent = '》Liste des inscrits';
+                    document.getElementById('legendInscripted').style.display = 'none';
+                    document.getElementById('divinscripted').style.display = 'none';
+                }
+            }
+        });
+
+        // événements du boutton pour afficher la création des groupes
+        document.getElementById('buttonDisplaycreategroup').addEventListener('click', function () {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                if (document.getElementById('divcreategroup').style.display === 'none') {
+                    document.getElementById('buttonDisplaycreategroup').textContent = '︾ Création des groupes GvG';
+                    document.getElementById('divcreategroup').style.display = 'block';
+                } else {
+                    document.getElementById('buttonDisplaycreategroup').textContent = '》Création des groupes GvG';
+                    document.getElementById('divcreategroup').style.display = 'none';
+                }
+            }
+        });
+
+        // création de la liste des évents des groupes type
+        const listEventsaveGroupType = [['buttonSaveGroupTypeAtt', 'SaveGroupTypeAtt'], ['buttonSaveGroupTypeDef', 'SaveGroupTypeDef']];
+        listEventsaveGroupType.forEach(nameButton => {
+            document.getElementById(nameButton[0]).addEventListener('click', function () {
+                const now = new Date();
+                if (now - timerThrottlebutton > 1000) {
+                    timerThrottlebutton = now;
+                    saveGroup(nameButton[1]);
+                }
+            });
+        });
+        const listEventChargerGroupType = [['buttonChargerGroupTypeAtt', 'chargergrouptypeatt'], ['buttonChargerGroupTypeDef', 'chargergrouptypedef']];
+        listEventChargerGroupType.forEach(nameButton => {
+            document.getElementById(nameButton[0]).addEventListener('click', async function () {
+                const now = new Date();
+                if (now - timerThrottlebutton > 1000) {
+                    timerThrottlebutton = now;
+                    window.location.href = '/' + nameButton[1];
+                }
+            });
         });
 
         // Boutton pour voir les groupes de façon non modifiable
@@ -95,39 +170,11 @@ export async function containercreategroup(data) {
                 const now = new Date();
                 if (now - timerThrottlebutton > 500) {
                     timerThrottlebutton = now;
-                    // saveGroup();
+                    // saveGroup('current');
                     window.location.href = '/viewGroup';
                 }
             });
         }
-
-        // événements du boutton d'affichage des inscrits
-        document.getElementById('buttonDisplayInscripted').addEventListener('click', function () {
-            const now = new Date();
-            if (now - timerThrottlebutton > 500) {
-                timerThrottlebutton = now;
-                if (document.getElementById('divinscripted').style.display === 'none') {
-                    document.getElementById('legendInscripted').style.display = 'flex';
-                    document.getElementById('divinscripted').style.display = 'block';
-                } else {
-                    document.getElementById('legendInscripted').style.display = 'none';
-                    document.getElementById('divinscripted').style.display = 'none';
-                }
-            }
-        });
-
-        // événements du boutton d'affichage des inscrits
-        document.getElementById('buttonDisplaycreategroup').addEventListener('click', function () {
-            const now = new Date();
-            if (now - timerThrottlebutton > 500) {
-                timerThrottlebutton = now;
-                if (document.getElementById('divcreategroup').style.display === 'none') {
-                    document.getElementById('divcreategroup').style.display = 'block';
-                } else {
-                    document.getElementById('divcreategroup').style.display = 'none';
-                }
-            }
-        });
 
     } else {
         fetchlogout();
@@ -143,7 +190,7 @@ async function listInscripted(data) {
     // Boutton pour afficher la liste des inscrits
     let buttonDisplayInscripted = await createHTMLElement('div', 'buttonDisplayInscripted');
     buttonDisplayInscripted.id = 'buttonDisplayInscripted';
-    buttonDisplayInscripted.textContent = 'Liste des inscrits';
+    buttonDisplayInscripted.textContent = '》Liste des inscrits';
     divlistInscripted.appendChild(buttonDisplayInscripted);
 
     // légende
@@ -483,10 +530,10 @@ async function insertSelectUnit(selectunit, caserne, nameUnit, optionUser) {
     if (caserne !== null && caserne.length !== undefined) {
         for (let j = 0; j < caserne.length; j++) {
             const unit = caserne[j];
-            if (nameUnit !== unit.Unit_name) {
+            if (nameUnit !== unit.Unit_name && unit.Unit_lvl !== "0") {
                 let option = document.createElement('option');
                 option.value = unit.Unit_name;
-                if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '') {
+                if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '0') {
                     option.text = '🔴 ' + unit.Unit_name + ' (lvl ' + unit.Unit_lvl + ')';
                 } else if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '1') {
                     option.text = '🟡 ' + unit.Unit_name + ' (lvl ' + unit.Unit_lvl + ')';
@@ -505,7 +552,7 @@ async function insertSelectUnit(selectunit, caserne, nameUnit, optionUser) {
                 }
             } else {
                 defaultoptionUnit.value = nameUnit;
-                if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '') {
+                if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '0') {
                     defaultoptionUnit.text = '🔴 ' + nameUnit + ' (lvl ' + unit.Unit_lvl + ')';
                 } else if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '1') {
                     defaultoptionUnit.text = '🟡 ' + nameUnit + ' (lvl ' + unit.Unit_lvl + ')';
@@ -602,6 +649,7 @@ function createOneGroupe(data) {
         divGroup.appendChild(divuser)
     }
     creategroup.appendChild(divGroup)
+    optionSelectUsername();
 }
 
 // --------------------------------------------------------
@@ -676,7 +724,7 @@ function namegroup(data, groupNumber) {
 // --------------------------------------------------------
 // ----------------- Fonction fetch back ------------------
 // --------------------------------------------------------
-function saveGroup() {
+function saveGroup(optiontype) {
     const creategroup = document.getElementById('creategroup');
     const divuserElements = creategroup.querySelectorAll('.divuser');
 
@@ -716,7 +764,7 @@ function saveGroup() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ dataToSend: dataToSend, namegroup: namegroup }),
+            body: JSON.stringify({ dataToSend: dataToSend, namegroup: namegroup, optiontype: optiontype }),
         })
             .catch(error => {
                 console.error('Erreur lors de la récupération des données:', error);
@@ -1069,4 +1117,49 @@ function updateSelectUnit(data, selectunit1, selectunit2, selectunit3, selectuni
     insertSelectUnit(selectunit4, infoUsersave.UserCaserne, "", 0);
     selectunit4.id = 'unit4' + usernameSansEspaces;
 
+}
+
+function groupType() {
+    let groupType = createHTMLElement('div', 'divGroupType');
+    groupType.style.display = 'none';
+
+    // Avertissement
+    let information = document.createElement('p');
+    information.innerHTML = `Sauvegarder va écraser le groupe type correspondant.</br>
+    Lors du chargement d'un groupe type, les joueurs non inscrits ne seront pas affichés et les lignes resteront vides.`;
+    groupType.appendChild(information);
+
+    // Sauvegarde
+    let divSave = createHTMLElement('div', 'divSave');
+    let titlesaveGroupType = document.createElement('h2');
+    titlesaveGroupType.textContent = 'Sauvegarder le groupe type en tant que';
+    divSave.appendChild(titlesaveGroupType);
+    let saveGroupType = createHTMLElement('div', 'saveGroupType');
+    let buttonSaveGroupTypeAtt = createHTMLElement('div', 'buttonSaveGroupTypeAtt');
+    buttonSaveGroupTypeAtt.textContent = 'Attaque';
+    saveGroupType.appendChild(buttonSaveGroupTypeAtt);
+
+    let buttonSaveGroupTypeDef = createHTMLElement('div', 'buttonSaveGroupTypeDef');
+    buttonSaveGroupTypeDef.textContent = 'Défense';
+    saveGroupType.appendChild(buttonSaveGroupTypeDef);
+    divSave.appendChild(saveGroupType);
+    groupType.appendChild(divSave);
+
+    // Chargement
+    let divCharger = createHTMLElement('div', 'divCharger');
+    let titlechargerGroupType = document.createElement('h2');
+    titlechargerGroupType.textContent = 'Charger le groupe type';
+    divCharger.appendChild(titlechargerGroupType);
+    let chargerGroupType = createHTMLElement('div', 'chargerGroupType');
+    let buttonChargerGroupTypeAtt = createHTMLElement('div', 'buttonChargerGroupTypeAtt');
+    buttonChargerGroupTypeAtt.textContent = 'Attaque';
+    chargerGroupType.appendChild(buttonChargerGroupTypeAtt);
+
+    let buttonChargerGroupTypeDef = createHTMLElement('div', 'buttonChargerGroupTypeDef');
+    buttonChargerGroupTypeDef.textContent = 'Défense';
+    chargerGroupType.appendChild(buttonChargerGroupTypeDef);
+    divCharger.appendChild(chargerGroupType);
+    groupType.appendChild(divCharger);
+
+    return groupType
 }
