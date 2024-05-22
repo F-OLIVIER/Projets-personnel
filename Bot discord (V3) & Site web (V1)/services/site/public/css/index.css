@@ -253,7 +253,7 @@ button:hover {
     flex-direction: column;
     text-align: center;
     width: 100%;
-    background-color: rgba(0, 110, 255, 0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     border-radius: 20px;
 }
 
@@ -676,6 +676,13 @@ button:hover {
 .group1,
 .viewgroup1 {
     background-color: #fef4c3;
+    color: black;
+    text-shadow: 1px 1px 5px rgba(255, 255, 255), 0 0 1em rgb(255, 255, 255), 0 0 0.2em rgb(255, 255, 255);
+
+}
+
+.viewgroup1 .consultOff {
+    background-color: #f98348;
 }
 
 
