@@ -14,8 +14,6 @@ func SaveCreateGroup(r *http.Request, database *sql.DB) {
 	err := json.NewDecoder(r.Body).Decode(&listGroup)
 	CheckErr("Erreur de décodage JSON SaveCreateGroup", err)
 
-	fmt.Println("listGroup.Optiontype : ", listGroup.Optiontype)
-
 	// Optiontype possible : "current" "SaveGroupTypeAtt" "SaveGroupTypeDef"
 	var requestDeleteDB, requestInsertDB string
 	switch listGroup.Optiontype {
