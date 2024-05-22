@@ -362,54 +362,6 @@ function addEventOnAllButton(listUnit, connectedUsername) {
             adminitrateBot('buttonNewclass');
         }
     });
-
-    // Suppression d'un joueur
-    // let selectDeleteUser = document.getElementById('selectDeleteUser');
-    // selectDeleteUser.addEventListener('change', () => {
-    //     const parts = selectDeleteUser.value.split('-');
-    //     const playerSelectedwithoutID = parts.slice(1).join('-');
-
-    //     // suppression des anciens éléments si existant
-    //     if (document.getElementById('divInfoDeleteUser')) {
-    //         document.getElementById('divInfoDeleteUser').remove();
-    //         if (document.getElementById('buttonConfirmDeleteUser')) {
-    //             document.getElementById('buttonConfirmDeleteUser').remove();
-    //         }
-    //     }
-
-    //     if (selectDeleteUser.value != "") {
-    //         let formDeleteUser = document.getElementById('formDeleteUser');
-
-    //         // Div d'information
-    //         let divInfo = document.createElement('div');
-    //         divInfo.id = 'divInfoDeleteUser'
-    //         if (playerSelectedwithoutID === connectedUsername) {
-    //             divInfo.textContent = 'Pour supprimer votre propre compte contactez un administrateur';
-    //             formDeleteUser.appendChild(divInfo)
-    //         } else {
-    //             divInfo.textContent = 'ATTENTION : vous êtes sur le point de supprimer le joueur ' + playerSelectedwithoutID;
-    //             formDeleteUser.appendChild(divInfo)
-
-    //             // button de confirmation de la suppression
-    //             let buttonDeleteUser = document.createElement('button');
-    //             buttonDeleteUser.id = 'buttonConfirmDeleteUser';
-    //             buttonDeleteUser.type = 'button';
-    //             buttonDeleteUser.className = 'buttonConfirmDeleteUser';
-    //             buttonDeleteUser.textContent = "Confirmer la supression";
-    //             formDeleteUser.appendChild(buttonDeleteUser);
-
-    //             document.getElementById('buttonConfirmDeleteUser').addEventListener('click', (event) => {
-    //                 event.preventDefault();
-    //                 const now = new Date();
-    //                 if (now - timerThrottlebutton > 500) {
-    //                     timerThrottlebutton = now;
-    //                     adminitrateBot('buttonConfirmDeleteUser');
-    //                 }
-    //             });
-    //         }
-    //     }
-
-    // });
 }
 
 // option et le name du button cliquer
@@ -418,13 +370,10 @@ async function adminitrateBot(option) {
 
     // activate or desactivate bot
     if (option === 'buttonBotEtat') {
-        dataToSend.Allumage = removeHTMLTags(document.getElementById('buttonBotEtat').value); // false = desactivation, true = activation
+        dataToSend.Allumage = document.getElementById('buttonBotEtat').value; // false = desactivation, true = activation
         sendData(dataToSend);
-    // } else if (option === 'buttonConfirmDeleteUser') { // suppression d'un utilisateur
-        // dataToSend.DeleteUser = document.getElementById('selectDeleteUser').value;
-        // sendData(dataToSend);
     } else if (option === 'buttonNewclass') {
-        dataToSend.newWeapon = removeHTMLTags(document.getElementById('nameNewclass').value);
+        dataToSend.newWeapon = document.getElementById('nameNewclass').value;
         sendData(dataToSend);
     } else {
         let formData = new FormData();
@@ -432,9 +381,22 @@ async function adminitrateBot(option) {
         // create Unit
         if (option === 'buttonNewUnit') {
             let createUnit = {};
-            createUnit.Unit_name = removeHTMLTags(document.getElementById('nameNewUnit').value);
-            createUnit.Unit_influence = removeHTMLTags(document.getElementById('influNewUnit').value);
-            createUnit.Unit_lvlMax = removeHTMLTags(document.getElementById('lvlMaxNewUnit').value);
+            const inputvalue_name = document.getElementById('nameNewUnit').value
+            createUnit.Unit_name = removeHTMLTags(inputvalue_name);
+            if (dataToSend.Unit_name !== inputvalue_name) {
+                alert("Les balises HTML ne sont pas autorisées.");
+                return
+            }
+            createUnit.Unit_influence = document.getElementById('influNewUnit').value;
+            if (dataToSend.Unit_influence > 500) {
+                alert("Influence impossible.");
+                return
+            }
+            createUnit.Unit_lvlMax = document.getElementById('lvlMaxNewUnit').value;
+            if (dataToSend.Unit_lvlMax > 50) {
+                alert("Level max d'unité impossible.");
+                return
+            }
             createUnit.Unit_tier = document.getElementById('tierNewUnit').value;
             createUnit.Unit_type = document.getElementById('typeNewUnit').value;
             createUnit.Unit_maitrise = checkedRadioValue_Unit_maitrise;
@@ -477,9 +439,23 @@ async function adminitrateBot(option) {
         // change Unit
         if (option === 'buttonChangeUnit') {
             let changeUnit = {};
-            changeUnit.Unit_name = removeHTMLTags(document.getElementById('selectChangeUnit').value);
-            changeUnit.Unit_influence = removeHTMLTags(document.getElementById('changeUnitInfluence').value);
-            changeUnit.Unit_lvlMax = removeHTMLTags(document.getElementById('changeUnitLvlMax').value);
+            // changeUnit.Unit_name = removeHTMLTags(document.getElementById('selectChangeUnit').value);
+            const inputvalue_name = document.getElementById('selectChangeUnit').value
+            changeUnit.Unit_name = removeHTMLTags(inputvalue_name);
+            if (changeUnit.Unit_name !== inputvalue_name) {
+                alert("Les balises HTML ne sont pas autorisées.");
+                return
+            }
+            changeUnit.Unit_influence = document.getElementById('changeUnitInfluence').value;
+            if (changeUnit.Unit_influence > 500) {
+                alert("Influence impossible.");
+                return
+            }
+            changeUnit.Unit_lvlMax = document.getElementById('changeUnitLvlMax').value;
+            if (changeUnit.Unit_influence > 50) {
+                alert("Level max d'unité impossible.");
+                return
+            }
             // changeUnit.Unit_tier = document.getElementById('changeUnitTier').value;
             const checkboxChangeUnitMaitrise = document.getElementById('changeUnitMaitrise');
             if (checkboxChangeUnitMaitrise.checked) {
