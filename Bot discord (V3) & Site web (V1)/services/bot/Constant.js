@@ -24,12 +24,6 @@ export const client = new
     ]
   });
 
-// --------------------------------------
-// ------------- Adaptation -------------
-// --------------------------------------
-// ligne 34 : List d'id des admins
-// ligne 46 : Utilisateur autorisé pour les commandes !mp
-
 // Gestion des admins du bot
 export function BooleanAdmin(DiscordPlayerID) {
   for (var CurrentAdmin = 0; CurrentAdmin < ListAdmin.length; CurrentAdmin++) {

@@ -25,54 +25,54 @@ export async function removeReaction(reaction, user) {
 export async function msgreactgvg(BotReaction, jour, mois, date) {
   // Gestion de l'affichage du mois
   var moisfr = "";
-  var moisen = "";
+  // var moisen = "";
   if (mois == 0) {
     moisfr = "janvier";
-    moisen = "january";
+    // moisen = "january";
   } else if (mois == 1) {
     moisfr = "février";
-    moisen = "february";
+    // moisen = "february";
   } else if (mois == 2) {
     moisfr = "mars";
-    moisen = "march";
+    // moisen = "march";
   } else if (mois == 3) {
     moisfr = "avril";
-    moisen = "april";
+    // moisen = "april";
   } else if (mois == 4) {
     moisfr = "mai";
-    moisen = "may";
+    // moisen = "may";
   } else if (mois == 5) {
     moisfr = "juin";
-    moisen = "june";
+    // moisen = "june";
   } else if (mois == 6) {
     moisfr = "juillet";
-    moisen = "july";
+    // moisen = "july";
   } else if (mois == 7) {
     moisfr = "août";
-    moisen = "august";
+    // moisen = "august";
   } else if (mois == 8) {
     moisfr = "septembre";
-    moisen = "september";
+    // moisen = "september";
   } else if (mois == 9) {
     moisfr = "octobre";
-    moisen = "october";
+    // moisen = "october";
   } else if (mois == 10) {
     moisfr = "novembre";
-    moisen = "november";
+    // moisen = "november";
   } else if (mois == 11) {
     moisfr = "décembre";
-    moisen = "december";
+    // moisen = "december";
   }
 
   // Génére le format de date pour le message
   var msgfr = "";
-  var msgen = "";
+  // var msgen = "";
   if (jour == 2) { // la date sera un mardi (jour 2)
     msgfr = "mardi " + date + " " + moisfr + "";
-    msgen = "tuesday " + moisen + " " + date + "";
+    // msgen = "tuesday " + moisen + " " + date + "";
   } else if (jour == 6) { // la date sera un samedi (jour 6)
     msgfr = "samedi " + date + " " + moisfr + "";
-    msgen = "saturday " + moisen + " " + date + "";
+    // msgen = "saturday " + moisen + " " + date + "";
   }
 
   // Génére le message et l'envoi sur discord
@@ -80,10 +80,10 @@ export async function msgreactgvg(BotReaction, jour, mois, date) {
     content: "<@&" + idRoleUser + ">,les inscriptions pour la GvG de ***" + msgfr + "*** sont ouvertes",
     files: ["https://i43.servimg.com/u/f43/15/76/70/95/image_15.png"]
   });
-  // Ajout des réactions present, retard et absent
+  // Ajout des réactions de base
   await sendMessage.react("👍"); // emoji present
   // await sendMessage.react("⌚"); // emoji retard
   await sendMessage.react("👎"); // emoji absent
-  // Inscription de l'ID du message dans la db
+  // Inscription du nouvelle ID du message dans la db
   updateIdMessage(sendMessage.id);
 }
