@@ -61,10 +61,6 @@ export function Messagelist(AuthorID, list_present, list_retard, list_absent) {
   BotChanOfficier.send("<@" + AuthorID + ">\nVoici les listes pour la prochaine GvG : \n\n__Liste des joueurs **presents**__ : \n" + list_present + "\n\n__Liste des joueurs **absent**__ :\n" + list_absent);
 }
 
-export function Messageprivatemp(AuthorID, userpourmp) {
-  BotChanOfficier.send("<@" + AuthorID + ">\nLe message de rappel d'incription à la prochaine GvG à bien été envoyé en mp à : <@" + userpourmp + ">");
-}
-
 // Embled DATA
 export async function EmbedGuide() {
 

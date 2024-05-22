@@ -1,5 +1,6 @@
 // fichier annexe
 import { MAJPresent, MAJRetard, MAJAbsent, removeInscription } from './FuncRaid.js';
+import { idRoleUser } from './config.js';
 import { updateIdMessage } from './database.js';
 
 // Fonction d'ajout de réaction
@@ -76,7 +77,7 @@ export async function msgreactgvg(BotReaction, jour, mois, date) {
 
   // Génére le message et l'envoi sur discord
   var sendMessage = await BotReaction.send({
-    content: "<@&951159160190427137> \n__**Français :**__ les inscriptions pour la GvG de ***" + msgfr + "*** sont ouvertes \n__**English :**__ registrations for TW on ***" + msgen + "*** are now open",
+    content: "<@&" + idRoleUser + ">,les inscriptions pour la GvG de ***" + msgfr + "*** sont ouvertes",
     files: ["https://i43.servimg.com/u/f43/15/76/70/95/image_15.png"]
   });
   // Ajout des réactions present, retard et absent
