@@ -1,5 +1,5 @@
 import { adressAPI } from "./config.js";
-import { communBlock, createHTMLElement, fetchServer, fetchlogout } from "./useful.js";
+import { communBlock, createHTMLElement, fetchServer, fetchlogout, removeHTMLTags } from "./useful.js";
 
 export async function creategroup(option) {
     containercreategroup(await fetchServer('creategroup'));
@@ -752,7 +752,7 @@ function saveGroup(optiontype) {
         const inputValue = inputElement ? inputElement.value : '';
         if (inputValue != '') {
             currentGroup[0] = divnamegroupElement.id.replace('divnamegroup', '');
-            currentGroup[1] = inputValue;
+            currentGroup[1] = removeHTMLTags(inputValue);
         }
 
         namegroup.push(currentGroup);

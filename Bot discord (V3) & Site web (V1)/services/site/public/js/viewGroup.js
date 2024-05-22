@@ -64,79 +64,77 @@ function containerviewGroup(data) {
         let groupNumber = 1;
         for (let k = 0; k < groupNumberMax; k++) {
             // récupération des utilisateurs present dans le groupe
-            for (let i = 0; i < groupNumberMax; i++) {
-                const currentGroupe = usersInGroup(data, groupNumber);
-                const groupName = 'viewgroup' + groupNumber;
+            const currentGroupe = usersInGroup(data, groupNumber);
+            const groupName = 'viewgroup' + groupNumber;
+            
+            let divGroup = document.createElement('div');
+            divGroup.classList.add('divViewGroup');
+            divGroup.classList.add(groupName);
 
-                let divGroup = document.createElement('div');
-                divGroup.classList.add('divViewGroup');
-                divGroup.classList.add(groupName);
+            // Nom du groupe
+            const divnameUserGroup = createHTMLElement('div', 'divnamegroup' + groupNumber);
+            divnameUserGroup.classList.add('divnamegroup');
 
-                // Nom du groupe
-                const divnameUserGroup = createHTMLElement('div', 'divnamegroup' + groupNumber);
-                divnameUserGroup.classList.add('divnamegroup');
-
-                const nameUserGroup = createHTMLElement('div', 'namegroup' + groupNumber);
-                nameUserGroup.classList.add('namegroup');
-                if (data.NameGroupGvG[groupNumber]) {
-                    nameUserGroup.textContent = 'Groupe ' + data.NameGroupGvG[groupNumber];
-                } else {
-                    nameUserGroup.textContent = 'Groupe n°' + groupNumber;
-                }
-                divGroup.appendChild(nameUserGroup);
-
-                for (let j = 0; j < currentGroupe.length; j++) {
-                    const currentPlayer = currentGroupe[j];
-
-                    let divuser = document.createElement('div');
-                    divuser.classList.add(groupName);
-                    divuser.classList.add('divuserviewgroup');
-
-                    // pseudo player
-                    let name = createHTMLElement('div', 'viewusername');
-                    name.textContent = currentPlayer.Username;
-                    divuser.appendChild(name);
-
-                    // classe player
-                    let classplayer = createHTMLElement('div', 'classplayer');
-                    classplayer.textContent = currentPlayer.class;
-                    divuser.appendChild(classplayer);
-
-                    // Unité du joueur
-                    let divlistUnit = createHTMLElement('div', 'viewdivlistUnit');
-                    let unit1 = createHTMLElement('div', 'unit1');
-                    unit1.textContent = currentPlayer.Unit1;
-                    if (currentPlayer.Unit1 === "Consulter un officier") {
-                        unit1.classList.add('consultOff');
-                    }
-                    divlistUnit.appendChild(unit1);
-                    let unit2 = createHTMLElement('div', 'unit2');
-                    unit2.textContent = currentPlayer.Unit2;
-                    if (currentPlayer.Unit2 === "Consulter un officier") {
-                        unit2.classList.add('consultOff');
-                    }
-                    divlistUnit.appendChild(unit2);
-                    let unit3 = createHTMLElement('div', 'unit3');
-                    unit3.textContent = currentPlayer.Unit3;
-                    if (currentPlayer.Unit3 === "Consulter un officier") {
-                        unit3.classList.add('consultOff');
-                    }
-                    divlistUnit.appendChild(unit3);
-                    let unit4 = createHTMLElement('div', 'unit4');
-                    unit4.textContent = currentPlayer.Unit4;
-                    if (currentPlayer.Unit4 === "Consulter un officier") {
-                        unit4.classList.add('consultOff');
-                    }
-                    divlistUnit.appendChild(unit4);
-
-                    // ne pas afficher les lignes vide
-                    if (currentPlayer.Username != "") {
-                        divuser.appendChild(divlistUnit);
-                        divGroup.appendChild(divuser);
-                    }
-                }
-                viewgroup.appendChild(divGroup);
+            const nameUserGroup = createHTMLElement('div', 'namegroup' + groupNumber);
+            nameUserGroup.classList.add('namegroup');
+            if (data.NameGroupGvG[groupNumber]) {
+                nameUserGroup.textContent = 'Groupe ' + data.NameGroupGvG[groupNumber];
+            } else {
+                nameUserGroup.textContent = 'Groupe n°' + groupNumber;
             }
+            divGroup.appendChild(nameUserGroup);
+
+            for (let j = 0; j < currentGroupe.length; j++) {
+                const currentPlayer = currentGroupe[j];
+
+                let divuser = document.createElement('div');
+                divuser.classList.add(groupName);
+                divuser.classList.add('divuserviewgroup');
+
+                // pseudo player
+                let name = createHTMLElement('div', 'viewusername');
+                name.textContent = currentPlayer.Username;
+                divuser.appendChild(name);
+
+                // classe player
+                let classplayer = createHTMLElement('div', 'classplayer');
+                classplayer.textContent = currentPlayer.class;
+                divuser.appendChild(classplayer);
+
+                // Unité du joueur
+                let divlistUnit = createHTMLElement('div', 'viewdivlistUnit');
+                let unit1 = createHTMLElement('div', 'unit1');
+                unit1.textContent = currentPlayer.Unit1;
+                if (currentPlayer.Unit1 === "Consulter un officier") {
+                    unit1.classList.add('consultOff');
+                }
+                divlistUnit.appendChild(unit1);
+                let unit2 = createHTMLElement('div', 'unit2');
+                unit2.textContent = currentPlayer.Unit2;
+                if (currentPlayer.Unit2 === "Consulter un officier") {
+                    unit2.classList.add('consultOff');
+                }
+                divlistUnit.appendChild(unit2);
+                let unit3 = createHTMLElement('div', 'unit3');
+                unit3.textContent = currentPlayer.Unit3;
+                if (currentPlayer.Unit3 === "Consulter un officier") {
+                    unit3.classList.add('consultOff');
+                }
+                divlistUnit.appendChild(unit3);
+                let unit4 = createHTMLElement('div', 'unit4');
+                unit4.textContent = currentPlayer.Unit4;
+                if (currentPlayer.Unit4 === "Consulter un officier") {
+                    unit4.classList.add('consultOff');
+                }
+                divlistUnit.appendChild(unit4);
+
+                // ne pas afficher les lignes vide
+                if (currentPlayer.Username != "") {
+                    divuser.appendChild(divlistUnit);
+                    divGroup.appendChild(divuser);
+                }
+            }
+            viewgroup.appendChild(divGroup);
             groupNumber += 1;
         }
 
@@ -226,13 +224,15 @@ function usersInGroup(data, groupNumber) {
 
 function influenceUnit(currentUser, caserne) {
     let unitValues = 0;
-    for (let i = 0; i < caserne.length; i++) {
-        let nameCurrentUnit = caserne[i].Unit_name
-        if (nameCurrentUnit === currentUser.Unit1 ||
-            nameCurrentUnit === currentUser.Unit2 ||
-            nameCurrentUnit === currentUser.Unit3 ||
-            nameCurrentUnit === currentUser.Unit4) {
-            unitValues += parseInt(caserne[i].Unit_influence, 10);
+    if (caserne !== null) {
+        for (let i = 0; i < caserne.length; i++) {
+            let nameCurrentUnit = caserne[i].Unit_name
+            if (nameCurrentUnit === currentUser.Unit1 ||
+                nameCurrentUnit === currentUser.Unit2 ||
+                nameCurrentUnit === currentUser.Unit3 ||
+                nameCurrentUnit === currentUser.Unit4) {
+                unitValues += parseInt(caserne[i].Unit_influence, 10);
+            }
         }
     }
 
