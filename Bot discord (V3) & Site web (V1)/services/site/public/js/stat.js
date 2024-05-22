@@ -169,7 +169,7 @@ function DisplayUsers(data, div) {
             const statinfo = createHTMLElement('div', 'statinfo');
             const titlelistGvG = document.createElement('div');
             titlelistGvG.classList = 'titlelistGvGstat';
-            titlelistGvG.textContent = 'Liste des GvG ou ' + currentUser.Username + ' à participé';
+            titlelistGvG.textContent = 'Liste des GvG ou ' + currentUser.Username + " s'était inscrit present";
             statinfo.appendChild(titlelistGvG);
 
             let listGvGValid = '';
