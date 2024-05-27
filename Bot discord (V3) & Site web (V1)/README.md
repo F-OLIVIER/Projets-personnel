@@ -41,7 +41,6 @@ Les officiers de la guilde ont accès à plusieurs onglets dont ne dispose pas u
     </tbody>
 </table>
 
-
 ___
 ## ⚙️ Installation & usage
 
@@ -57,42 +56,35 @@ ___
 
 **Méthode d'éxécution :** <br>
 Une méthode d'éxécutions possible sur un serveur ce fais via [Screen](https://doc.ubuntu-fr.org/screen)</br>
-Installer le avec :
-```sh
-sudo apt install screen
-```
+
 Lors du premier lancement, le site internet doit être exécuté en premier, car c'est lui qui crée la base de donnée. Ensuite le bot discord peut être exécuté, lors de son lancement, il va compléter la base de donnée avec les utilisateurs déjà présent sur le discord.
 
 Pour démarrer le site internet (qui se trouve dans le dossier `./services/site`)
 ```sh
-screen -S site_internet
+screen -R site_internet
 sh ./launch_site.sh
 # Pour detacher la console, faite `[CTRL]+[a]` suivi de `[d]`
 ```
 
 Pour démarrer le bot Discord (qui se trouve dans le dossier `./services/bot`)
 ```sh
-screen -S bot_discord
+screen -R bot_discord
 sh ./launch_bot.sh
 # Pour detacher la console, faite `[CTRL]+[a]` suivi de `[d]`
 ```
 
-**Sécurisation du site internet :** <br>
-Il est possible de sécuriser (passer en HTTPS) le site internet avec [Caddy](https://caddyserver.com/docs/automatic-https)<br>
-Voici la procédure pour [intaller Caddy](https://caddyserver.com/docs/install)
-```sh
-screen -S caddy
-caddy
-# Pour detacher la console, faite `[CTRL]+[a]` suivi de `[d]`
-```
 ___
 ## 🔗 Dépendences
 
 **Partie 1 : le bot Discord** <br>
-Le serveur utilise la version 18 de [nodeJS](https://nodejs.org/en) est les module [npm](https://www.npmjs.com) version 9 suivant :<br>
+Le serveur utilise la version 22 de [nodeJS](https://nodejs.org/en) est les modules (dépendence) [npm](https://www.npmjs.com) version 10 suivants :<br>
+- [discord.js](https://www.npmjs.com/package/discord.js)
+- [discord-reactions-roles](https://www.npmjs.com/package/discord-reactions-roles)
 - [sqlite3](https://www.npmjs.com/package/sqlite3)
 - [moment-timezone](https://www.npmjs.com/package/moment-timezone)
+- [date-fns](https://www.npmjs.com/package/date-fns)
 - [cron](https://www.npmjs.com/package/cron)
+
 
 **Partie 2 : le site internet** <br>
 Le front utilise du `javascript`, `html` et `css`.<br>
