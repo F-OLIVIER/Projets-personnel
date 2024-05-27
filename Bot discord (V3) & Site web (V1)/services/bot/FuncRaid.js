@@ -13,8 +13,8 @@ export function Resetsc() {
     if (error) {
       console.error(error.message);
     }
+    db.close();
   });
-  db.close();
 
   deleteListGvG();
 }
@@ -27,8 +27,8 @@ export function Resetraz() {
     if (error) {
       console.error(error.message);
     }
+    db.close();
   });
-  db.close();
 
   deleteListGvG();
 }
@@ -120,8 +120,8 @@ function deleteListGvG() {
     if (error) {
       console.error(error.message);
     }
+    db.close();
   });
-  db.close();
 }
 
 
@@ -142,6 +142,7 @@ export function MAJPresent(DiscordID) { // EtatInscription = 1
         if (error) {
           console.error(error.message);
         }
+        db.close();
       });
     }
   });
@@ -192,6 +193,32 @@ export function MAJAbsent(DiscordID) { // EtatInscription = 3
     }
   });
   db.close();
+}
+
+export async function MAJinscription(DiscordID, etatInscription) { // EtatInscription = 3
+  const db = new sqlite3.Database(adressdb);
+
+  // Promesse pour l'exécution de la mise à jour
+  const runQuery = (query, params) => {
+    return new Promise((resolve, reject) => {
+      db.run(query, params, function (error) {
+        if (error) {
+          console.error(error.message);
+          reject(error);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  };
+
+  try {
+    await runQuery(`UPDATE Users SET EtatInscription = ? WHERE DiscordID = ?;`, [etatInscription, DiscordID]);
+  } catch (error) {
+    console.error(error.message);
+  } finally {
+    db.close(); // Fermeture de la base de données après l'exécution de la requête
+  }
 }
 
 export function removeInscription(DiscordID) {

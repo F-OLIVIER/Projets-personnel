@@ -1,5 +1,5 @@
 // Fichier annexe
-import { IDmsgGvG, etatmsgGvG } from './database.js';
+import { DeleteEvent, IDmsgGvG, ListEvent, etatmsgGvG } from './database.js';
 import { TODOBotReaction, idCategorie } from './config.js';
 import { msgreactgvg } from './Reaction.js';
 import { isMember } from './FuncData.js';
@@ -69,3 +69,20 @@ export async function cronResetMsgReaction(BotReaction) {
     console.log("Fonction automatique resetmsgreact à l'arret : " + CurrentDate);
   }
 }
+
+
+// Fonction de check des presence pendant la GvG
+export async function cronDeleteEvent() {
+  const currentDate = new Date();
+  const listEvent = await ListEvent();
+
+  if (listEvent && listEvent.length > 0) {
+    listEvent.forEach(async (event) => {
+      const eventDate = new Date(event.Dates);
+      if (eventDate < currentDate) {
+        await DeleteEvent(event.ID);
+      }
+    });
+  }
+}
+

@@ -2,16 +2,19 @@
 import { TODOBotChan, TODOBotChanOfficier, TODOBotReaction, siteInternet, idRoleUser, idRoleOfficier } from './config.js';
 import { slashvisite, visit1, modalvisitelvlAndInflu, visit2, visit3, slashvisitenotpossible } from './guide.js';
 import { createCommands, slashClass, slashInflu, slashLevel, slashRaidReset, slashResetmsggvg } from './slashcommand.js';
-import { botOn, unregisteredList, isOfficier, deleteUser } from './database.js';
+import { botOn, unregisteredList, isOfficier, deleteUser, listInscription, ListEvent, ListInscriptedEvent, CancelEventInscription, InscriptionEvent, existEvent, DeleteEvent } from './database.js';
+import { ButtonEmbedInscription, EmbedInscription, addReaction, removeReaction } from './Reaction.js';
 import { PlayerCreateOrUpdate, createuser, isMember } from './FuncData.js';
 import { client, Messagegvg, EmbedData, EmbedGuide } from './Constant.js';
-import { cronCheckpresence, cronResetMsgReaction } from "./Cronjob.js"
-import { addReaction, removeReaction } from './Reaction.js';
+import { cronCheckpresence, cronDeleteEvent, cronResetMsgReaction } from "./Cronjob.js"
+import { EmbedEvent, createevent, modalcreateevent } from './Event.js';
 import { cmdnb, cmdlist } from "./CommandBot.js";
 
 // Module nodejs et npm
 import { } from 'dotenv/config';
 import { CronJob } from 'cron';
+import { MAJinscription } from './FuncRaid.js';
+import { AttachmentBuilder } from 'discord.js';
 
 client.login(process.env.TOKEN);
 client.on('error', (error) => { console.error('\nUne erreur est survenue :\n', error); });
@@ -160,17 +163,30 @@ client.on("messageReactionRemove", async (reaction, user) => {
 client.on('messageCreate', async message => {
 
   const BotReaction = client.channels.cache.get(TODOBotReaction);
-  
+
   if (message.author.bot) return;
   var MC = message.content.toLowerCase();
   var AuthorID = message.author.id;
   await PlayerCreateOrUpdate(AuthorID);
+
   if (!await isMember(AuthorID)) return;
 
   // Fonction de test
-  if (MC.startsWith("/test")) {
-    cronResetMsgReaction(BotReaction);
-    message.delete();
+  if (MC.startsWith("!test")) {
+    const futurdateformate = new Date();
+    const jour = 2 // futurdateformate.getDay();
+    const date = futurdateformate.getDate();
+    const mois = futurdateformate.getMonth();
+    const imageAttachment = new AttachmentBuilder('https://i.ibb.co/chF2Z4W/Upj0-MHck-1.gif');
+    await message.reply({
+      files: [imageAttachment],
+      embeds: [await EmbedInscription(jour, date, mois)],
+      components: [await ButtonEmbedInscription()],
+    }).then(() => {
+      message.delete();
+    }).catch(err => {
+      console.error('Error sending message:', err);
+    });
   }
 
 });
@@ -180,6 +196,113 @@ client.on('messageCreate', async message => {
 // --------------------------------------------------------------
 client.on('interactionCreate', async (interaction) => {
   if (interaction.user.bot) return;
+
+  // ---------------------------------------------------------------------------------
+  // --------------------------- Test Embed Inscription ------------------------------
+  // ---------------------------------------------------------------------------------
+
+  if (interaction.isButton()) {
+    const userId = interaction.user.id;
+
+    // Gestion des boutons d'inscription au GvG
+    if (interaction.customId === 'present' || interaction.customId === 'absent') {
+      if (interaction.customId === 'present') {
+        await MAJinscription(userId, 1);
+      } else if (interaction.customId === 'absent') {
+        await MAJinscription(userId, 3);
+      } else {
+        console.log('probléme boutton');
+      }
+
+      const listinscrit = await listInscription();
+
+      let presentList = [];
+      if (listinscrit[0] !== undefined) {
+        presentList = listinscrit[0].map(id => {
+          const userId = BigInt(id);
+          const user = client.users.cache.get(userId.toString());
+          return user ? user.displayName : null;
+        }).filter(displayName => displayName !== null);
+      }
+
+      let absentList = [];
+      if (listinscrit[2] !== undefined) {
+        absentList = listinscrit[2].map(id => {
+          const userId = BigInt(id);
+          const user = client.users.cache.get(userId.toString());
+          return user ? user.displayName : null;
+        }).filter(displayName => displayName !== null);
+      }
+
+      const imageAttachment = new AttachmentBuilder('https://i.ibb.co/chF2Z4W/Upj0-MHck-1.gif');
+      await interaction.update({
+        embeds: [await EmbedInscription(presentList, absentList)],
+      }).catch(err => {
+        console.error('Error update Embed EmbedInscription:', err);
+      });
+
+      return
+    }
+
+    // Gestion des boutons d'inscription au événements divers
+    const currentDate = new Date();
+    const listEvent = await ListEvent();
+    if (listEvent && listEvent.length > 0) {
+      for (let index = 0; index < listEvent.length; index++) {
+        const event = listEvent[index];
+        // modification uniquement si la date et à venir
+        const eventDate = new Date(event.Dates);
+        if (eventDate > currentDate) {
+          // inscription à un event
+          if (interaction.customId === 'eventinscripted' + event.ID && await existEvent(event.ID)) {
+            await InscriptionEvent(interaction.user.id, event.ID);
+            const listinscripted = await ListInscriptedEvent(event.ID);
+            await interaction.update({
+              embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
+            }).catch(err => {
+              console.error('Error update EmbedEvent eventinscripted :', err);
+            });
+            return true
+          }
+
+          // désinscription à un event
+          if (interaction.customId === 'eventdisinscripted' + event.ID && await existEvent(event.ID)) {
+            await CancelEventInscription(interaction.user.id, event.ID);
+            const listinscripted = await ListInscriptedEvent(event.ID);
+
+            await interaction.update({
+              embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
+            }).catch(err => {
+              console.error('Error update EmbedEvent eventdisinscripted :', err);
+            });
+            return true
+          }
+        } else {
+          await DeleteEvent(event.ID);
+        }
+      }
+    }
+
+    // si l'interaction n'existe plus, suppression des bouttons d'interactions
+    if (interaction.customId.includes('eventinscripted')) {
+      await interaction.update({
+        components: [],
+      }).catch(err => {
+        console.error('Error update components EmbedEvent event passé :', err);
+      });
+
+      await interaction.followUp({
+        content: "L'événement est passé, inscription impossible.",
+        ephemeral: true,
+      });
+
+      return true
+    }
+  }
+  // ---------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------
+
   interaction.ephemeral = true;
 
   // -----------------------
@@ -188,6 +311,11 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.isModalSubmit()) {
     if (interaction.customId === 'modalvisite') {
       return visit2(interaction);
+    }
+
+    if (interaction.customId === 'modalcreateevent') {
+      await createevent(interaction);
+      return true
     }
   }
 
@@ -221,6 +349,19 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 
+  // interaction création d'un event divers, Command /visite_guidée
+  if (interaction.commandName === "créer_un_événement") {
+    if (await isOfficier(interaction.user.id)) {
+      return await modalcreateevent(interaction);
+    } else {
+      interaction.reply({
+        content: "Vous n'avez pas les autorisations nécéssaire pour réaliser cet action",
+        ephemeral: true,
+      });
+    }
+    return true
+  }
+
   // Les intéraction suivante sont réservé aux membre
   if (!await isMember(interaction.user.id)) return;
 
@@ -233,7 +374,7 @@ client.on('interactionCreate', async (interaction) => {
     return true;
   }
 
-  // interaction qui retourne l'embed guide de l'utilisateur, Command /data
+  // interaction qui retourne l'embed guide de l'utilisateur, Command /guide
   if (interaction.commandName === "guide") {
     interaction.reply({
       embeds: [await EmbedGuide()],
@@ -346,5 +487,11 @@ function TaskHandle(BotReaction) {
     cronResetMsgReaction(BotReaction);
   }, null, true, 'Europe/Paris');
   resetmsgreact.start();
+
+  // fonction de supression automatique des événements divers passé
+  let deleteEvent = new CronJob('0 0 0 * * *', function () {
+    cronDeleteEvent();
+  }, null, true, 'Europe/Paris');
+  deleteEvent.start();
 }
 

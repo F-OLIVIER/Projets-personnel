@@ -26,10 +26,16 @@ export async function createCommands() {
     // Suppression d'une slash command de l'intégration discord
     // await client.application.commands.delete('1232617831787528222'); // id de la slashcommand à supprimer
 
-    // Création de la commande '/data'
+    // Création de la commande '/visite_guidée'
     await client.application.commands.create({
         name: "visite_guidée",
         description: "Le pére blaise vous fais visiter les fonctionnalités proposé par le bot discord",
+    });
+
+    // Création de la commande '/créer_un_événement'
+    await client.application.commands.create({
+        name: "créer_un_événement",
+        description: "Permet de créer un événement (créé dans le canal dans lequel vous exécutez cette commande).",
     });
 
     // Création de la commande '/data'
