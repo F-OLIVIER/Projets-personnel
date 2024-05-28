@@ -51,6 +51,7 @@ export async function cronResetMsgReaction(BotReaction) {
       futurdate = moment().add(3, 'days');
     } else {
       console.log('Day 2 ou 6 non présent, mauvais reset');
+      return
     }
 
     // génére la date au bon format
@@ -65,6 +66,7 @@ export async function cronResetMsgReaction(BotReaction) {
     client.channels.cache.get(TODOBotReaction).messages.fetch(id_msg[0].IDMessageGvG).then(message => message.delete());
     Resetac();
     msgreactgvg(BotReaction, jour, mois, date);
+    
   } else {
     console.log("Fonction automatique resetmsgreact à l'arret : " + CurrentDate);
   }
