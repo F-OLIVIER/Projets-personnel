@@ -28,6 +28,7 @@ button {
     font-size: 18px;
     background-color: #fef4c3;
     color: rgb(0, 0, 0);
+    transition: all ease-in-out 0.2s;
 }
 
 button:hover {
@@ -103,6 +104,7 @@ button:hover {
     font-family: Agbalumo, sans-serif;
     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
     cursor: pointer;
+    transition: all ease-in-out 0.4s;
 }
 
 .Title:hover {
@@ -191,6 +193,7 @@ button:hover {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 25px;
+    transition: all ease-in-out 0.2s;
 }
 
 .discordConnect:hover {
@@ -287,6 +290,7 @@ button:hover {
     margin-bottom: 25px;
     background-color: rgb(92, 72, 224);
     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    transition: all ease-in-out 0.2s;
 }
 
 .buttoncharacterCard:hover,
@@ -347,6 +351,12 @@ button:hover {
 
 .divInfanterie {
     background-color: rgb(77, 77, 255);
+}
+
+#titleInfanterie,
+#titleDistant,
+#titleCav {
+    transition: all ease-in-out 0.2s;
 }
 
 #titleInfanterie:hover {
@@ -755,6 +765,7 @@ button:hover {
 .buttonEditGroup {
     margin-bottom: 10px;
     background-color: rgb(92, 72, 224);
+    transition: all ease-in-out 0.2s;
 }
 
 .buttonDisplayInscripted:hover,
@@ -769,6 +780,7 @@ button:hover {
 .buttonDownloadGroup,
 .buttonSaveGroup {
     background-color: rgb(224, 223, 72);
+    transition: all ease-in-out 0.2s;
 }
 
 .buttonAddGroup:hover,
@@ -780,6 +792,7 @@ button:hover {
 
 .buttonGroupType {
     background-color: rgb(51, 250, 233);
+    transition: all ease-in-out 0.2s;
 }
 
 .buttonGroupType:hover {
@@ -837,6 +850,7 @@ button:hover {
     padding: 10px;
     font-size: large;
     cursor: pointer;
+    transition: all ease-in-out 0.2s;
 }
 
 .buttonSaveGroupTypeAtt:hover,
@@ -1141,6 +1155,10 @@ button:hover {
     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
     min-height: 40px;
     border-bottom: 2px solid black;
+}
+
+.divstatwitchinfo .statuser {
+    transition: all ease-in-out 0.2s;
 }
 
 .divstatwitchinfo .statuser:hover {
