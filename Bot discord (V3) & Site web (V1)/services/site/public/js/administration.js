@@ -200,35 +200,34 @@ function containerAppAdmin(data) {
         divNewclass.appendChild(formNewclass);
         subContainer.appendChild(divNewclass);
 
-        // Suprimer un utilisateur
-        // let divDeleteUser = createHTMLElement('div', 'divDeleteUser');
-        // let titleDeleteUser = createHTMLElement('div', 'titleDeleteUser');
-        // titleDeleteUser.textContent = 'Suprimer un joueur';
-        // divDeleteUser.appendChild(titleDeleteUser);
-        // let formDeleteUser = createHTMLElement('form', 'formDeleteUser');
-        // formDeleteUser.enctype = 'multipart/form-data';
-        // formDeleteUser.method = 'POST';
-        // let selectDeleteUser = createHTMLElement('select', 'selectDeleteUser');
-        // let defaultDeleteUser = document.createElement('option');
-        // defaultDeleteUser.value = "";
-        // defaultDeleteUser.text = "Choisissez";
-        // selectDeleteUser.appendChild(defaultDeleteUser);
-        // for (let i = 0; i < data.ListInscripted.length; i++) {
-        //     const currentPlayer = data.ListInscripted[i];
-        //     let option = document.createElement('option');
-        //     option.text = currentPlayer.Username;
-        //     option.value = currentPlayer.ID + '-' + currentPlayer.Username;
-        //     selectDeleteUser.appendChild(option);
-        // }
-        // formDeleteUser.appendChild(selectDeleteUser);
-        // divDeleteUser.appendChild(formDeleteUser);
-        // subContainer.appendChild(divDeleteUser);
+        // Reset des stat GvG (participé et total)
+        let divresetnbgvg = createHTMLElement('div', 'divresetnbgvg');
+        let titleresetnbgvg = createHTMLElement('div', 'titleresetnbgvg');
+        titleresetnbgvg.textContent = "Ré-initialisation stat GvG";
+        divresetnbgvg.appendChild(titleresetnbgvg);
+
+        let explicationresetnbgvg = createHTMLElement('div', 'explicationbotetat');
+        explicationresetnbgvg.textContent = '(Mettre à 0 le nombre de GvG participé et le nombre total de GvG pour tous les joueurs)';
+        divresetnbgvg.appendChild(explicationresetnbgvg);
+
+        let formresetnbgvg = document.createElement('form');
+        formresetnbgvg.id = 'formresetnbgvg';
+        formresetnbgvg.className = 'formresetnbgvg';
+        formresetnbgvg.method = 'POST';
+
+        let buttonresetnbgvg = createHTMLElement('button', 'buttonresetnbgvg');
+        buttonresetnbgvg.textContent = "Re-initialiser les stat GvG";
+        buttonresetnbgvg.type = 'submit';
+        formresetnbgvg.appendChild(buttonresetnbgvg);
+
+        divresetnbgvg.appendChild(formresetnbgvg);
+        subContainer.appendChild(divresetnbgvg);
 
         let Container = document.getElementById('Container');
         Container.innerHTML = '';
         Container.appendChild(subContainer);
 
-        addEventOnAllButton(data.ListUnit, data.UserInfo.Username);
+        addEventOnAllButton(data.ListUnit);
 
     } else {
         fetchlogout();
@@ -236,7 +235,7 @@ function containerAppAdmin(data) {
 }
 
 let timerThrottlebutton = 0;
-function addEventOnAllButton(listUnit, connectedUsername) {
+function addEventOnAllButton(listUnit) {
     // Activation/Désactivation du bot
     document.getElementById('buttonBotEtat').addEventListener('click', (event) => {
         event.preventDefault();
@@ -362,6 +361,16 @@ function addEventOnAllButton(listUnit, connectedUsername) {
             adminitrateBot('buttonNewclass');
         }
     });
+
+    // Reset des stat GvG (participé et total)
+    document.getElementById('buttonresetnbgvg').addEventListener('click', (event) => {
+        event.preventDefault();
+        const now = new Date();
+        if (now - timerThrottlebutton > 500) {
+            timerThrottlebutton = now;
+            adminitrateBot('buttonresetnbgvg');
+        }
+    });
 }
 
 // option et le name du button cliquer
@@ -374,6 +383,9 @@ async function adminitrateBot(option) {
         sendData(dataToSend);
     } else if (option === 'buttonNewclass') {
         dataToSend.newWeapon = document.getElementById('nameNewclass').value;
+        sendData(dataToSend);
+    } else if (option === 'buttonresetnbgvg') {
+        dataToSend.resetnbgvg = true;
         sendData(dataToSend);
     } else {
         let formData = new FormData();
@@ -419,9 +431,15 @@ async function adminitrateBot(option) {
                         createUnit.Unit_tier === "" ||
                         createUnit.Unit_type === "") {
                         let divError = document.getElementById('divErrorAddUnit');
-                        divError.textContent = "Merci de compléter tout les champs pour la création de la nouevelle unité";
+                        divError.textContent = "Merci de compléter tout les champs pour la création de la nouvelle unité";
                         divError.style.display = 'block';
 
+                    } else if (createUnit.Unit_influence < 0 || createUnit.Unit_influence > 500 ||
+                        createUnit.Unit_lvlMax < 0 || createUnit.Unit_lvlMax > 50
+                    ) {
+                        let divError = document.getElementById('divErrorAddUnit');
+                        divError.textContent = "Probléme de saisie dans un champs pour la création de la nouvelle unité";
+                        divError.style.display = 'block';
                     } else {
                         sendFormData(formData);
                         window.location.href = '/AppAdmin';
@@ -447,12 +465,12 @@ async function adminitrateBot(option) {
                 return
             }
             changeUnit.Unit_influence = document.getElementById('changeUnitInfluence').value;
-            if (changeUnit.Unit_influence > 500) {
+            if (changeUnit.Unit_influence > 500 || changeUnit.Unit_influence < 0) {
                 alert("Influence impossible.");
                 return
             }
             changeUnit.Unit_lvlMax = document.getElementById('changeUnitLvlMax').value;
-            if (changeUnit.Unit_influence > 50) {
+            if (changeUnit.Unit_influence > 50 || changeUnit.Unit_influence < 0) {
                 alert("Level max d'unité impossible.");
                 return
             }
@@ -478,7 +496,7 @@ async function adminitrateBot(option) {
                     window.location.href = '/AppAdmin';
                 };
                 reader.readAsDataURL(input_change_img.files[0]);
-            } else if (changeUnit.Unit_influence == "" && changeUnit.Unit_lvlMax == "") {
+            } else if (changeUnit.Unit_influence == "" && changeUnit.Unit_lvlMax == "" && !checkboxChangeUnitMaitrise.checked) {
                 let divErrorChangeUnit = document.getElementById('divErrorChangeUnit');
                 divErrorChangeUnit.textContent = "Merci de compléter au moins un champs ou mettre une image pour mettre à jour l'unité " + changeUnit.Unit_name;
                 divErrorChangeUnit.style.display = 'block';
@@ -516,3 +534,4 @@ function sendFormData(formData) {
             console.error('Erreur lors de l\'envoi de l\'image et des données:', error);
         });
 }
+

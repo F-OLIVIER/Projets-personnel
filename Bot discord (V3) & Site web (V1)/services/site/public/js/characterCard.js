@@ -150,13 +150,16 @@ function majPersonnage() {
     let dataToSend = {}
     dataToSend.GameCharacter = document.getElementById('newClass').value;
     dataToSend.Lvl = document.getElementById('newlvl').value;
-    if (dataToSend.Lvl  > 10000) {
-        alert("Ce level est impossible, veuillez cooriger la valeur.");
+    if (dataToSend.Lvl !== "" &&
+        (dataToSend.Lvl > 10000 || dataToSend.Lvl < 0)) {
+        alert("Ce level est impossible, veuillez corriger la valeur.");
         return
     }
     dataToSend.Influence = document.getElementById('newInflu').value;
-    if (dataToSend.Influence  > 1200) {
-        alert("Cet influence est impossible, veuillez cooriger la valeur.");
+    if (dataToSend.Influence !== "" &&
+        (dataToSend.Influence > 1200 || dataToSend.Influence < 700)) {
+        console.log('dataToSend.Influence : ', dataToSend.Influence)
+        alert("Cet influence est impossible, veuillez corriger la valeur.");
         return
     }
 

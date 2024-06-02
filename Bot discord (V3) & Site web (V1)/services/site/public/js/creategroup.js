@@ -18,6 +18,11 @@ export async function containercreategroup(data) {
         // affichage de la liste des inscrits
         let divlistInscripted = await listInscripted(data.ListInscripted);
         containerGroupe.appendChild(divlistInscripted);
+
+        // afficher l'encart de selection d'une unit et savoir qui là
+        let divwhohaveunit = await whohaveunit(data);
+        containerGroupe.appendChild(divwhohaveunit);
+
         let divcreategroup = await createHTMLElement('div', 'divcreategroup');
         divcreategroup.style.display = 'none';
 
@@ -124,6 +129,21 @@ export async function containercreategroup(data) {
             }
         });
 
+        // événements du boutton pour afficher "qui à l'unité ?"
+        document.getElementById('buttonDisplaywhohaveunit').addEventListener('click', function () {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                if (document.getElementById('whohaveunit').style.display === 'none') {
+                    document.getElementById('buttonDisplaywhohaveunit').textContent = "︾ Qui à l'unité ?";
+                    document.getElementById('whohaveunit').style.display = 'block';
+                } else {
+                    document.getElementById('buttonDisplaywhohaveunit').textContent = "》Qui à l'unité ?";
+                    document.getElementById('whohaveunit').style.display = 'none';
+                }
+            }
+        });
+
         // événements du boutton pour afficher la création des groupes
         document.getElementById('buttonDisplaycreategroup').addEventListener('click', function () {
             const now = new Date();
@@ -182,7 +202,7 @@ export async function containercreategroup(data) {
 }
 
 // --------------------------------------------------------
-// ------------- Partie "Liste des Inscrits ---------------
+// ------------- Partie "Liste des Inscrits" --------------
 // --------------------------------------------------------
 async function listInscripted(data) {
     let divlistInscripted = await createHTMLElement('div', 'listInscripted');
@@ -279,6 +299,81 @@ async function listInscripted(data) {
 }
 
 // --------------------------------------------------------
+// -------------- Partie "Qui a l'unité ?" ----------------
+// --------------------------------------------------------
+async function whohaveunit(data) {
+    let divwhohaveunit = await createHTMLElement('div', 'divwhohaveunit');
+
+    // Boutton pour afficher la liste des inscrits
+    let buttonDisplaywhohaveunit = await createHTMLElement('div', 'buttonDisplaywhohaveunit');
+    buttonDisplaywhohaveunit.id = 'buttonDisplaywhohaveunit';
+    buttonDisplaywhohaveunit.textContent = "》Qui à l'unité ?";
+    divwhohaveunit.appendChild(buttonDisplaywhohaveunit);
+
+    let whohaveunit = await createHTMLElement('div', 'whohaveunit');
+    let selectwhohaveunit = createHTMLElement('select', 'selectwhohaveunit');
+    let defaultwhohaveunit = document.createElement('option');
+    defaultwhohaveunit.value = "";
+    defaultwhohaveunit.text = "Choisissez";
+    selectwhohaveunit.appendChild(defaultwhohaveunit);
+    for (let i = 0; i < data.ListUnit.length; i++) {
+        const currentUnit = data.ListUnit[i];
+        let option = document.createElement('option');
+        option.value = currentUnit.Unit_name;
+        option.text = currentUnit.Unit_name;
+        selectwhohaveunit.appendChild(option);
+    }
+    whohaveunit.appendChild(selectwhohaveunit);
+
+    let listplayerwhohaveunit = await createHTMLElement('div', 'listplayerwhohaveunit');
+    listplayerwhohaveunit.textContent = "Choississez une unité pour connaitre la liste des joueurs qui ont cet unité";
+    whohaveunit.appendChild(listplayerwhohaveunit);
+
+    divwhohaveunit.appendChild(whohaveunit);
+    whohaveunit.style.display = 'none';
+
+    // évenement de selection de l'unité
+    selectwhohaveunit.addEventListener('change', () => {
+        const now = new Date();
+        if (now - timerThrottlebutton > 500) {
+            timerThrottlebutton = now;
+
+            if (selectwhohaveunit.value != "") {
+                let unitSelected;
+                for (let i = 0; i < data.ListUnit.length; i++) {
+                    if (selectwhohaveunit.value === data.ListUnit[i].Unit_name) {
+                        unitSelected = data.ListUnit[i];
+                        break;
+                    }
+                }
+
+                let listplayer = [];
+                for (let i = 0; i < data.ListInscripted.length; i++) {
+                    const currentuser = data.ListInscripted[i];
+                    if (currentuser.UserCaserne !== null) {
+                        currentuser.UserCaserne.some((unit) => {
+                            if (unit.Unit_id === unitSelected.Unit_id && unit.Unit_lvl !== "0") {
+                                listplayer.push(currentuser.Username);
+                            }
+                        });
+                    }
+                }
+
+                if (listplayer.length === 0) {
+                    listplayerwhohaveunit.textContent = "Aucun joueurs n'a cet unité";
+                } else {
+                    listplayerwhohaveunit.textContent = listplayer.join(' - ');
+                }
+            } else {
+                listplayerwhohaveunit.textContent = "Choississez une unité pour connaitre la liste des joueurs qui ont cet unité";
+            }
+        }
+    });
+
+    return divwhohaveunit
+}
+
+// --------------------------------------------------------
 // ----------- Partie "Création des groupes" --------------
 // --------------------------------------------------------
 // ***************** Option "exist group" *****************
@@ -308,7 +403,7 @@ async function createExistGroupe(data, userIngroup) {
             currentUser.Unit3 = userIngroup[i].Unit3;
             currentUser.Unit4 = userIngroup[i].Unit4;
 
-            // mise a jour de la divplace pour chaque joueur deja placé dans la liste des inscrits
+            // mise à jour de la divplace pour chaque joueur deja placé dans la liste des inscrits
             document.getElementById('player_' + userIngroup[i].Username.replace(/\s/g, '')).textContent = '✅';
         }
 

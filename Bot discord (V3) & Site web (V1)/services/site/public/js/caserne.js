@@ -17,7 +17,7 @@ function containercaserne(data) {
         let TitleDivInfanterie = document.createElement('div');
         TitleDivInfanterie.id = 'titleInfanterie';
         TitleDivInfanterie.classList.add("titlelistUnit");
-        TitleDivInfanterie.textContent = "》Infanterie"; // ︾
+        TitleDivInfanterie.textContent = "》Infanterie";
         let listUnitInfanterie = document.createElement('div');
         listUnitInfanterie.classList.add("listUnit");
         listUnitInfanterie.style.display = 'none';
@@ -26,7 +26,7 @@ function containercaserne(data) {
         let TitleDivDistant = document.createElement('div');
         TitleDivDistant.id = 'titleDistant';
         TitleDivDistant.classList.add("titlelistUnit");
-        TitleDivDistant.textContent = "》Distant"; // ︾
+        TitleDivDistant.textContent = "》Distant";
         let listUnitDistant = document.createElement('div');
         listUnitDistant.classList.add("listUnit");
         listUnitDistant.style.display = 'none';
@@ -35,7 +35,7 @@ function containercaserne(data) {
         let TitleDivCav = document.createElement('div');
         TitleDivCav.id = 'titleCav';
         TitleDivCav.classList.add("titlelistUnit");
-        TitleDivCav.textContent = "》Cavalerie"; // ︾
+        TitleDivCav.textContent = "》Cavalerie";
         let listUnitCav = document.createElement('div');
         listUnitCav.classList.add("listUnit");
         listUnitCav.style.display = 'none';
@@ -146,7 +146,7 @@ function addUnit(data, listUnitInfanterie, listUnitDistant, listUnitCav, tier) {
             if (Currentunit.Unit_lvl == Currentunit.Unit_lvlMax) {
                 defaultoption.text = 'level ' + Currentunit.Unit_lvl;
                 selecctlvl.style.backgroundColor = 'green';
-            } else if (Currentunit.Unit_lvl != '') {
+            } else if (Currentunit.Unit_lvl != '0') {
                 defaultoption.text = 'level ' + Currentunit.Unit_lvl;
                 selecctlvl.style.backgroundColor = 'orange';
             } else {
