@@ -2,7 +2,6 @@
 import { adressdb } from './config.js';
 
 // module nodejs et npm
-import moment from 'moment-timezone';
 import sqlite3 from 'sqlite3';
 
 export function Resetsc() {
@@ -21,7 +20,7 @@ export function Resetsc() {
 
 export function Resetraz() {
   const db = new sqlite3.Database(adressdb);
-  const updateQuery = `UPDATE Users SET EtatInscription = 0, NbEmojiInscription = 0, TrustIndicator = 0, NbGvGParticiped = 0;`;
+  const updateQuery = `UPDATE Users SET EtatInscription = 0, TrustIndicator = 0, NbGvGParticiped = 0;`;
 
   db.run(updateQuery, function (error) {
     if (error) {
@@ -64,7 +63,6 @@ export function Resetac() {
                                                 END,
                         MNDR = 0,
                         EtatInscription = 0,
-                        NbEmojiInscription = 0,
                         NbTotalGvG = NbTotalGvG + 1
                         WHERE DiscordID = ?;`;
 
@@ -124,81 +122,8 @@ function deleteListGvG() {
   });
 }
 
-
-export function MAJPresent(DiscordID) { // EtatInscription = 1
+export async function MAJinscription(DiscordID, etatInscription) {
   const db = new sqlite3.Database(adressdb);
-  const sql = "SELECT NbEmojiInscription FROM Users WHERE DiscordID = ?";
-
-  db.get(sql, [DiscordID], (err, row) => {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-
-    if (row) {
-      const updatedNbEmojiInscription = row.NbEmojiInscription + 1;
-      const updateQuery = `UPDATE Users SET EtatInscription = 1, NbEmojiInscription = ? WHERE DiscordID = ?;`;
-      db.run(updateQuery, [updatedNbEmojiInscription, DiscordID], function (error) {
-        if (error) {
-          console.error(error.message);
-        }
-        db.close();
-      });
-    }
-  });
-  db.close();
-}
-
-export function MAJRetard(DiscordID) { // EtatInscription = 2
-  const db = new sqlite3.Database(adressdb);
-  const sql = "SELECT NbEmojiInscription FROM Users WHERE DiscordID = ?";
-
-  db.get(sql, [DiscordID], (err, row) => {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-
-    if (row) {
-      const updatedNbEmojiInscription = row.NbEmojiInscription + 1;
-      const updateQuery = `UPDATE Users SET EtatInscription = 2, NbEmojiInscription = ? WHERE DiscordID = ?;`;
-      db.run(updateQuery, [updatedNbEmojiInscription, DiscordID], function (error) {
-        if (error) {
-          console.error(error.message);
-        }
-      });
-    }
-  });
-  db.close();
-}
-
-export function MAJAbsent(DiscordID) { // EtatInscription = 3
-  const db = new sqlite3.Database(adressdb);
-  const sql = "SELECT NbEmojiInscription FROM Users WHERE DiscordID = ?";
-
-  db.get(sql, [DiscordID], (err, row) => {
-    if (err) {
-      console.error(err.message);
-      return;
-    }
-
-    if (row) {
-      const updatedNbEmojiInscription = row.NbEmojiInscription + 1;
-      const updateQuery = `UPDATE Users SET EtatInscription = 3, NbEmojiInscription = ? WHERE DiscordID = ?;`;
-      db.run(updateQuery, [updatedNbEmojiInscription, DiscordID], function (error) {
-        if (error) {
-          console.error(error.message);
-        }
-      });
-    }
-  });
-  db.close();
-}
-
-export async function MAJinscription(DiscordID, etatInscription) { // EtatInscription = 3
-  const db = new sqlite3.Database(adressdb);
-
-  // Promesse pour l'exécution de la mise à jour
   const runQuery = (query, params) => {
     return new Promise((resolve, reject) => {
       db.run(query, params, function (error) {
@@ -217,7 +142,7 @@ export async function MAJinscription(DiscordID, etatInscription) { // EtatInscri
   } catch (error) {
     console.error(error.message);
   } finally {
-    db.close(); // Fermeture de la base de données après l'exécution de la requête
+    db.close();
   }
 }
 

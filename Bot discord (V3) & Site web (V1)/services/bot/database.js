@@ -430,28 +430,6 @@ export async function ListInscriptedEvent(idevent) {
     return list;
 }
 
-// export function existEvent(IDevent) {
-//     return new Promise((resolve, reject) => {
-//         const db = new sqlite3.Database(adressdb);
-//         const selectQuery = `SELECT ID FROM ListEvent WHERE ID = ?;`;
-
-//         db.get(selectQuery, [IDevent], (error, row) => {
-//             db.close();
-
-//             if (error) {
-//                 console.error('Error querying existing event:\n', error.message);
-//                 reject(error);
-//             } else {
-//                 if (row) {
-//                     resolve(true);
-//                 } else {
-//                     resolve(false);
-//                 }
-//             }
-//         });
-//     });
-// }
-
 export async function InscriptionEvent(discordIdAuthor, IDevent) {
     const db = new sqlite3.Database(adressdb);
 

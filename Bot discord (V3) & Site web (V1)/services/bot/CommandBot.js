@@ -1,10 +1,9 @@
 // Fichier annexe
 import { client, Messagenb, Messagelist } from './Constant.js';
-import { msgreactgvg } from './Reaction.js';
+import { msgreactgvg } from './gvg.js';
 import { listclass } from './database.js';
 
 // Module nodejs et npm
-import moment from 'moment-timezone';
 import { } from 'dotenv/config';
 import sqlite3 from 'sqlite3';
 
@@ -150,33 +149,5 @@ export async function cmdresetmsggvg(BotReaction, TODOBotReaction) {
 
   // suppression du précédent message d'inscription
   client.channels.cache.get(TODOBotReaction).messages.fetch(id_msg).then(message => message.delete());
-
-  // gestion de la date futur pour le message
-  var now = moment();
-  var day = now.day(); // 0 dimanche, 1 lundi, 2 mardi, 3 mercredi, 4 jeudi, 5 vendredi, 6 samedi
-
-  var futurdate;
-  if (day == 0) { // si dimanche (jour 0), gvg le mardi
-    futurdate = moment().add(2, 'days');
-  } else if (day == 1) { // si lundi (jour 1), gvg le mardi
-    futurdate = moment().add(1, 'days');
-  } else if (day == 2) { // si mardi (jour 2), gvg le samedi
-    futurdate = moment().add(4, 'days');
-  } else if (day == 3) { // si mercredi (jour 3), gvg le samedi
-    futurdate = moment().add(3, 'days');
-  } else if (day == 4) { // si jeudi (jour 4), gvg le samedi
-    futurdate = moment().add(2, 'days');
-  } else if (day == 5) { // si vendredi (jour 5), gvg le samedi
-    futurdate = moment().add(1, 'days');
-  } else if (day == 6) { // si samedi (jour 6), gvg le mardi
-    futurdate = moment().add(3, 'days');
-  }
-
-  // génére la date au bon format
-  const futurdateformate = new Date(futurdate + (moment().tz("Europe/Paris").utcOffset()));
-  // récupération du jour, de la date et du mois
-  var jour = futurdateformate.getDay();
-  var date = futurdateformate.getDate();
-  var mois = futurdateformate.getMonth();
-  msgreactgvg(BotReaction, jour, mois, date);
+  msgreactgvg(BotReaction);
 }

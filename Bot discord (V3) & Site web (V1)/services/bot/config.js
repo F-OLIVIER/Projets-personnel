@@ -7,8 +7,8 @@ export const adressdb = '../database/databaseGvG.db';
 // │             Constante à modifier              │
 // ╰───────────────────────────────────────────────╯
 // Adresse du site internet associé pour la commande message "/site"
-export const siteInternet = "http://lnb.sytes.net:8080";
-// export const siteInternet = "https://lnb.sytes.net:443";
+// export const siteInternet = "http://lnb.sytes.net:8080";
+export const siteInternet = "http://localhost:8080";
 
 // ID du serveur discord
 export const ServerID = '674215425546125323';

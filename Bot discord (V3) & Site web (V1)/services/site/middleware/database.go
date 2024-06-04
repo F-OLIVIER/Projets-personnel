@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -214,36 +213,16 @@ func UpdateAdministration(r *http.Request, database *sql.DB) {
 		stmt, err := database.Prepare("UPDATE GestionBot SET Allumage = ? WHERE ID = 1")
 		CheckErr("Update Allumage UpdateAdministration ", err)
 		stmt.Exec(newAllumage)
-	} else if data.DeleteUser != "" { // suppression d'un utilisateur de la db
-		parts := strings.Split(data.DeleteUser, "-")
-		UserID := parts[0]
-		Username := strings.Join(parts[1:], "-")
 
-		test, errdb := database.Prepare("SELECT ID FROM Users WHERE ID = ? AND DiscordName = ?")
-		CheckErr("Requete DB UserInfo", errdb)
-		existID := 0
-		test.QueryRow(UserID, Username).Scan(&existID)
-		if existID != 0 {
-			// supression de l'utilisateur dans la table Users
-			stmtUsers, err := database.Prepare("DELETE FROM Users WHERE ID = ?")
-			CheckErr("Delete User UpdateAdministration ", err)
-			_, err = stmtUsers.Exec(existID)
-			CheckErr("Execute delete statement UpdateAdministration", err)
-
-			// supression de l'utilisateur dans la table Caserne
-			stmtCaserne, err := database.Prepare("DELETE FROM Caserne WHERE User_ID = ?")
-			CheckErr("Delete User UpdateAdministration ", err)
-			_, err = stmtCaserne.Exec(existID)
-			CheckErr("Execute delete statement UpdateAdministration", err)
-
-			// supression de l'utilisateur dans la table CaserneMaitrise
-			stmtCaserneMaitrise, err := database.Prepare("DELETE FROM CaserneMaitrise WHERE User_ID = ?")
-			CheckErr("Delete User UpdateAdministration ", err)
-			_, err = stmtCaserneMaitrise.Exec(existID)
-			CheckErr("Execute delete statement UpdateAdministration", err)
-
-			// la suppression de l'utilisateur dans la table GroupGvG (si present) sera automatique au prochain reset
+		if newAllumage == 0 {
+			SendMessage("activatebot")
+		} else {
+			SendMessage("desactivatebot")
 		}
+	} else if data.Resetnbgvg { // reset des stat GvG
+		stmt, err := database.Prepare(`UPDATE Users SET NbGvGParticiped = 0, NbTotalGvG = 0;`)
+		CheckErr("Update Resetnbgvg UpdateAdministration", err)
+		stmt.Exec()
 	} else if data.NewWeapon != "" { // ajout d'une nouvelle arme de héros
 		// insertion de la nouvelle arme dans la db
 		stmt, err := database.Prepare(`INSERT INTO ListGameCharacter(ClasseFR) VALUES(?);`)

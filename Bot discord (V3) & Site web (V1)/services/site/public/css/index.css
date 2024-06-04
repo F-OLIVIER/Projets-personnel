@@ -1045,6 +1045,7 @@ button:hover {
 }
 
 .explicationbotetat {
+    text-align: left;
     font-size: medium;
     margin-bottom: 10px;
 }

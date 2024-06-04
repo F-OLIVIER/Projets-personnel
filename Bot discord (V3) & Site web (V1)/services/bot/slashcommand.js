@@ -24,18 +24,12 @@ export async function createCommands() {
     // -------------------------------------------------------------------
 
     // Suppression d'une slash command de l'intégration discord
-    // await client.application.commands.delete('1232617831787528222'); // id de la slashcommand à supprimer
+    // await client.application.commands.delete('1244231829104361542'); // id de la slashcommand à supprimer
 
     // Création de la commande '/visite_guidée'
     await client.application.commands.create({
         name: "visite_guidée",
         description: "Le pére blaise vous fais visiter les fonctionnalités proposé par le bot discord",
-    });
-
-    // Création de la commande '/créer_un_événement'
-    await client.application.commands.create({
-        name: "créer_un_événement",
-        description: "Permet de créer un événement (créé dans le canal dans lequel vous exécutez cette commande).",
     });
 
     // Création de la commande '/data'
@@ -114,6 +108,12 @@ export async function createCommands() {
     await client.application.commands.create({
         name: 'officier_liste_non_inscrits',
         description: "Affiche la liste des pseudo des joueurs non inscrit pour la prochaine GvG (réservé aux officier)",
+    });
+
+    // Création de la commande '/créer_un_événement'
+    await client.application.commands.create({
+        name: "officier_créer_un_événement",
+        description: "Permet de créer un événement (créé dans le canal dans lequel vous exécutez cette commande).",
     });
 
     // -------------------------------------------------------------------
@@ -269,3 +269,4 @@ export async function slashResetmsggvg(BotReaction, interaction) {
 
     return true
 }
+

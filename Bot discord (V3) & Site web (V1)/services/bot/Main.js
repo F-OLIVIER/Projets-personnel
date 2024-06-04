@@ -1,20 +1,21 @@
 // Fichier annexe
+import { unregisteredList, isOfficier, deleteUser, listInscription, ListEvent, ListInscriptedEvent, CancelEventInscription, InscriptionEvent, existEvent, DeleteEvent } from './database.js';
 import { TODOBotChan, TODOBotChanOfficier, TODOBotReaction, siteInternet, idRoleUser, idRoleOfficier } from './config.js';
 import { slashvisite, visit1, modalvisitelvlAndInflu, visit2, visit3, slashvisitenotpossible } from './guide.js';
 import { createCommands, slashClass, slashInflu, slashLevel, slashRaidReset, slashResetmsggvg } from './slashcommand.js';
-import { botOn, unregisteredList, isOfficier, deleteUser, listInscription, ListEvent, ListInscriptedEvent, CancelEventInscription, InscriptionEvent, existEvent, DeleteEvent } from './database.js';
-import { ButtonEmbedInscription, EmbedInscription, addReaction, removeReaction } from './Reaction.js';
-import { PlayerCreateOrUpdate, createuser, isMember } from './FuncData.js';
-import { client, Messagegvg, EmbedData, EmbedGuide } from './Constant.js';
 import { cronCheckpresence, cronDeleteEvent, cronResetMsgReaction } from "./Cronjob.js"
+import { client, Messagegvg, EmbedData, EmbedGuide } from './Constant.js';
 import { EmbedEvent, createevent, modalcreateevent } from './Event.js';
+import { PlayerCreateOrUpdate, createuser, isMember } from './FuncData.js';
 import { cmdnb, cmdlist } from "./CommandBot.js";
+import { MAJinscription } from './FuncRaid.js';
+import { EmbedInscription } from './gvg.js';
+import { socket } from './socket.js';
 
 // Module nodejs et npm
 import { } from 'dotenv/config';
 import { CronJob } from 'cron';
-import { MAJinscription } from './FuncRaid.js';
-import { AttachmentBuilder } from 'discord.js';
+import moment from 'moment-timezone';
 
 client.login(process.env.TOKEN);
 client.on('error', (error) => { console.error('\nUne erreur est survenue :\n', error); });
@@ -45,7 +46,8 @@ client.on('ready', async () => {
   const BotReaction = client.channels.cache.get(TODOBotReaction);
   console.log('│ • Initializing automatic function            │');
   TaskHandle(BotReaction);
-
+  console.log('│ • Initializing golang communication          │');
+  socket(BotReaction);
   console.log(`│──────────────────────────────────────────────│
 │              Start-up completed              │
 │                 Bot ready !                  │
@@ -106,12 +108,12 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (newMember.user.bot) return;
 
   // Roles utilisateur
-  const oldRoles = oldMember.roles.cache,
-    newRoles = newMember.roles.cache;
+  const oldRoles = oldMember.roles.cache;
+  const newRoles = newMember.roles.cache;
 
   // Has Role user ?
-  const oldHasuser = oldRoles.has(idRoleUser),
-    newHasuser = newRoles.has(idRoleUser);
+  const oldHasuser = oldRoles.has(idRoleUser);
+  const newHasuser = newRoles.has(idRoleUser);
   // Check if removed or added
   if (oldHasuser && !newHasuser) { // Role user remove
     deleteUser(newMember, BotChanOfficier)
@@ -120,8 +122,8 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   }
 
   // Has Role officier ?
-  const oldHasofficier = oldRoles.has(idRoleOfficier),
-    newHasofficier = newRoles.has(idRoleOfficier);
+  const oldHasofficier = oldRoles.has(idRoleOfficier);
+  const newHasofficier = newRoles.has(idRoleOfficier);
   if (oldHasofficier && !newHasofficier) { // Role officier remove
     await PlayerCreateOrUpdate(newMember.user.id);
   } else if (!oldHasofficier && newHasofficier) { // Role officier add
@@ -130,64 +132,35 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 });
 
 // --------------------------------------------------------------
-// -------------------- Add message reaction --------------------
-// --------------------------------------------------------------
-client.on("messageReactionAdd", async (reaction, user) => {
-  if (user.bot) return;
-  if (!await isMember(user.id)) return;
-
-  if (reaction.message.channel.id == TODOBotReaction && botOn(reaction.message.id)) {
-    await PlayerCreateOrUpdate(user.id);
-    // Ajout de la réaction
-    await addReaction(reaction, user);
-  }
-});
-
-// --------------------------------------------------------------
-// ------------------ Delete message reaction -------------------
-// --------------------------------------------------------------
-client.on("messageReactionRemove", async (reaction, user) => {
-  if (user.bot) return;
-  if (!await isMember(user.id)) return;
-
-  if (reaction.message.channel.id == TODOBotReaction && botOn(reaction.message.id)) {
-    await PlayerCreateOrUpdate(user.id);
-    // Retrait de la réaction
-    await removeReaction(reaction, user);
-  }
-});
-
-// --------------------------------------------------------------
 // ---------------------- Message command -----------------------
 // --------------------------------------------------------------
 client.on('messageCreate', async message => {
 
-  const BotReaction = client.channels.cache.get(TODOBotReaction);
-
   if (message.author.bot) return;
-  var MC = message.content.toLowerCase();
-  var AuthorID = message.author.id;
+  // const MC = message.content.toLowerCase();
+  // const BotReaction = client.channels.cache.get(TODOBotReaction);
+  const AuthorID = message.author.id;
   await PlayerCreateOrUpdate(AuthorID);
 
-  if (!await isMember(AuthorID)) return;
+  // if (!await isMember(AuthorID)) return;
 
   // Fonction de test
-  if (MC.startsWith("!test")) {
-    const futurdateformate = new Date();
-    const jour = 2 // futurdateformate.getDay();
-    const date = futurdateformate.getDate();
-    const mois = futurdateformate.getMonth();
-    const imageAttachment = new AttachmentBuilder('https://i.ibb.co/chF2Z4W/Upj0-MHck-1.gif');
-    await message.reply({
-      files: [imageAttachment],
-      embeds: [await EmbedInscription(jour, date, mois)],
-      components: [await ButtonEmbedInscription()],
-    }).then(() => {
-      message.delete();
-    }).catch(err => {
-      console.error('Error sending message:', err);
-    });
-  }
+  // if (MC.startsWith("!test")) {
+  //   const futurdateformate = new Date();
+  //   const jour = 2 // futurdateformate.getDay();
+  //   const date = futurdateformate.getDate();
+  //   const mois = futurdateformate.getMonth();
+  //   const imageAttachment = new AttachmentBuilder('https://i.ibb.co/chF2Z4W/Upj0-MHck-1.gif');
+  //   await message.reply({
+  //     files: [imageAttachment],
+  //     embeds: [await EmbedInscription(jour, date, mois)],
+  //     components: [await ButtonEmbedInscription()],
+  //   }).then(() => {
+  //     message.delete();
+  //   }).catch(err => {
+  //     console.error('Error sending message:', err);
+  //   });
+  // }
 
 });
 
@@ -234,7 +207,6 @@ client.on('interactionCreate', async (interaction) => {
         }).filter(displayName => displayName !== null);
       }
 
-      const imageAttachment = new AttachmentBuilder('https://i.ibb.co/chF2Z4W/Upj0-MHck-1.gif');
       await interaction.update({
         embeds: [await EmbedInscription(presentList, absentList)],
       }).catch(err => {
@@ -245,58 +217,80 @@ client.on('interactionCreate', async (interaction) => {
     }
 
     // Gestion des boutons d'inscription au événements divers
-    const currentDate = new Date();
-    const listEvent = await ListEvent();
-    if (listEvent && listEvent.length > 0) {
-      for (let index = 0; index < listEvent.length; index++) {
-        const event = listEvent[index];
-        // modification uniquement si la date et à venir
-        const eventDate = new Date(event.Dates);
-        if (eventDate > currentDate) {
-          // inscription à un event
-          if (interaction.customId === 'eventinscripted' + event.ID && await existEvent(event.ID)) {
-            await InscriptionEvent(interaction.user.id, event.ID);
-            const listinscripted = await ListInscriptedEvent(event.ID);
-            await interaction.update({
-              embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
-            }).catch(err => {
-              console.error('Error update EmbedEvent eventinscripted :', err);
-            });
-            return true
-          }
+    if (interaction.customId.includes('eventinscripted') || interaction.customId.includes('eventdisinscripted')) {
+      const customId = interaction.customId.match(/(?:eventinscripted|eventdisinscripted)(\d+)/);
+      const eventId = parseInt(customId[1], 10);
 
-          // désinscription à un event
-          if (interaction.customId === 'eventdisinscripted' + event.ID && await existEvent(event.ID)) {
-            await CancelEventInscription(interaction.user.id, event.ID);
-            const listinscripted = await ListInscriptedEvent(event.ID);
+      // si l'event n'existe plus dans la db
+      if (!await existEvent(customId)) {
+        // supression des bouttons
+        await interaction.update({
+          components: [],
+        }).catch(err => {
+          console.error('Error update existEvent EmbedEvent event passé :', err);
+        });
 
-            await interaction.update({
-              embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
-            }).catch(err => {
-              console.error('Error update EmbedEvent eventdisinscripted :', err);
-            });
-            return true
+        await interaction.followUp({
+          content: "L'événement est passé, inscription impossible.",
+          ephemeral: true,
+        });
+
+        return true
+      }
+
+      // si l'event existe dans la db
+      const currentDate = moment.tz('Europe/Paris');
+      const listEvent = await ListEvent();
+      if (listEvent && listEvent.length > 0) {
+        for (let index = 0; index < listEvent.length; index++) {
+          const event = listEvent[index];
+          if (eventId === event.ID) {
+            // modification uniquement si la date et à venir
+            const eventDate = moment.tz(event.Dates, ['DD/MM/YYYY HH:mm', 'DD-MM-YYYY HH:mm'], 'Europe/Paris');
+            if (eventDate.isAfter(currentDate)) {
+              // inscription à un event
+              if (interaction.customId === 'eventinscripted' + event.ID) {
+                await InscriptionEvent(interaction.user.id, event.ID);
+                const listinscripted = await ListInscriptedEvent(event.ID);
+                await interaction.update({
+                  embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
+                }).catch(err => {
+                  console.error('Error update EmbedEvent eventinscripted :', err);
+                });
+                return true
+              }
+
+              // désinscription à un event
+              if (interaction.customId === 'eventdisinscripted' + event.ID) {
+                await CancelEventInscription(interaction.user.id, event.ID);
+                const listinscripted = await ListInscriptedEvent(event.ID);
+
+                await interaction.update({
+                  embeds: [await EmbedEvent(event.Title, event.Dates, event.Descriptions, listinscripted)],
+                }).catch(err => {
+                  console.error('Error update EmbedEvent eventdisinscripted :', err);
+                });
+                return true
+              }
+            } else { // si la date de l'event est passé mais que l'event n'ai pas encore supprimé de la db
+              // supression de l'event de la db
+              await DeleteEvent(event.ID);
+              // supression des bouttons
+              await interaction.update({
+                components: [],
+              }).catch(err => {
+                console.error('Error update existEvent EmbedEvent event passé :', err);
+              });
+
+              await interaction.followUp({
+                content: "L'événement est passé, inscription impossible.",
+                ephemeral: true,
+              });
+              return true
+            }
           }
-        } else {
-          await DeleteEvent(event.ID);
         }
       }
-    }
-
-    // si l'interaction n'existe plus, suppression des bouttons d'interactions
-    if (interaction.customId.includes('eventinscripted')) {
-      await interaction.update({
-        components: [],
-      }).catch(err => {
-        console.error('Error update components EmbedEvent event passé :', err);
-      });
-
-      await interaction.followUp({
-        content: "L'événement est passé, inscription impossible.",
-        ephemeral: true,
-      });
-
-      return true
     }
   }
   // ---------------------------------------------------------------------------------
@@ -349,19 +343,6 @@ client.on('interactionCreate', async (interaction) => {
     }
   }
 
-  // interaction création d'un event divers, Command /visite_guidée
-  if (interaction.commandName === "créer_un_événement") {
-    if (await isOfficier(interaction.user.id)) {
-      return await modalcreateevent(interaction);
-    } else {
-      interaction.reply({
-        content: "Vous n'avez pas les autorisations nécéssaire pour réaliser cet action",
-        ephemeral: true,
-      });
-    }
-    return true
-  }
-
   // Les intéraction suivante sont réservé aux membre
   if (!await isMember(interaction.user.id)) return;
 
@@ -383,22 +364,22 @@ client.on('interactionCreate', async (interaction) => {
     return true;
   }
 
-  // interaction changement de level du héros, Command /lvl
+  // interaction changement de level du héros, Command /level
   if (interaction.commandName === "level") {
     return await slashLevel(interaction);
   }
 
-  // interaction changement de l'influence du héros, Command /influ
+  // interaction changement de l'influence du héros, Command /influence
   if (interaction.commandName === "influence") {
     return await slashInflu(interaction);
   }
 
-  // interaction changement de classe, Command /class
+  // interaction changement de classe, Command /classe
   if (interaction.commandName === "classe") {
     return await slashClass(interaction);
   }
 
-  // interaction qui donne l'adresse du site internet associé au bot
+  // interaction qui donne l'adresse du site internet associé au bot, Command /site
   if (interaction.commandName === "site") {
     interaction.reply({
       content: "Voici le lien du site internet associé au bot :\n<" + siteInternet + ">",
@@ -410,6 +391,8 @@ client.on('interactionCreate', async (interaction) => {
   // --------------------------
   // ---- Command Officier ----
   // --------------------------
+
+  // interaction affichage du nombre d'inscrits, Command /officier_nombre_inscript
   if (interaction.commandName === "officier_nombre_inscript") {
     if (isOfficier(interaction.user.id)) {
       cmdnb(interaction.user.id);
@@ -426,6 +409,7 @@ client.on('interactionCreate', async (interaction) => {
     return true;
   }
 
+  // interaction affichage de la liste des inscrits, Command /officier_liste_inscrits
   if (interaction.commandName === "officier_liste_inscrits") {
     if (isOfficier(interaction.user.id)) {
       cmdlist(interaction.user.id);
@@ -442,6 +426,7 @@ client.on('interactionCreate', async (interaction) => {
     return true;
   }
 
+  // interaction affichage de la liste des non inscrits, Command /officier_liste_non_inscrits
   if (interaction.commandName === "officier_liste_non_inscrits") {
     if (isOfficier(interaction.user.id)) {
       const unregisteredlist = await unregisteredList();
@@ -457,6 +442,19 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
     return true;
+  }
+
+  // interaction création d'un event divers, Command /officier_créer_un_événement
+  if (interaction.commandName === "officier_créer_un_événement") {
+    if (await isOfficier(interaction.user.id)) {
+      return await modalcreateevent(interaction);
+    } else {
+      interaction.reply({
+        content: "Vous n'avez pas les autorisations nécéssaire pour réaliser cet action",
+        ephemeral: true,
+      });
+    }
+    return true
   }
 
   // ------------------------------

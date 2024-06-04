@@ -4,9 +4,9 @@ import { createeventindb } from "./database.js";
 import { idRoleUser } from "./config.js";
 
 // Module nodejs et npm
-import { format } from 'date-fns';
 import moment from 'moment-timezone';
 import frLocale from 'date-fns/locale/fr';
+import { format } from 'date-fns';
 
 export async function modalcreateevent(interaction) {
     const modal = new ModalBuilder()
@@ -33,8 +33,8 @@ export async function modalcreateevent(interaction) {
                 .setComponents(
                     new TextInputBuilder()
                         .setCustomId('date')
-                        .setLabel("Date et heure (ex: 2024-05-26 14:30)")
-                        .setPlaceholder("AAAA-MM-JJ HH:MM")
+                        .setLabel("Date et heure (ex: 03/05/2024 21:00)")
+                        .setPlaceholder("JJ/MM/AAAA HH:MM")
                         .setStyle(TextInputStyle.Short)
                         .setRequired(true)
                 )
@@ -51,9 +51,20 @@ export async function createevent(interaction) {
     const descriptionInput = interaction.fields.getTextInputValue('description');
     // date et heure de l'event
     const dateInput = interaction.fields.getTextInputValue('date');
-    if (!moment(dateInput, 'YYYY-MM-DD HH:mm', true).isValid()) {
+
+    if (!moment(dateEn(dateInput), 'YYYY-MM-DD HH:mm', true).isValid()) {
         interaction.reply({
-            content: "Format de date et heure invalide. Merci d'utilisez AAAA-MM-JJ HH:MM.",
+            content: `Format de date et heure invalide. Merci d'utilisez "JJ/MM/AAAA HH:MM" ou "JJ-MM-AAAA HH:MM".`,
+            ephemeral: true
+        });
+        return
+    }
+
+    const inputDate = moment(dateEn(dateInput), 'YYYY-MM-DD HH:mm', true);
+    const currentDate = moment();
+    if (inputDate.isBefore(currentDate)) {
+        interaction.reply({
+            content: "Vous avez mis une date passé.",
             ephemeral: true
         });
         return
@@ -63,6 +74,7 @@ export async function createevent(interaction) {
 
     await interaction.reply({
         files: ["https://i43.servimg.com/u/f43/15/76/70/95/events12.jpg"],
+        content: "<@&" + idRoleUser + ">",
         embeds: [await EmbedEvent(titleInput, dateInput, descriptionInput)],
         components: [await ButtonEmbedEvent(idevent)],
     }).catch(err => {
@@ -77,16 +89,17 @@ export async function EmbedEvent(title, date, description, inscrit = []) {
     }
 
     const listeDesInscrits = inscrit.map(entry => entry.DiscordName).join(' - ');
-    const dateFormat = new Date(date);
-    const formattedDate = format(dateFormat, "'Le' EEEE dd MMMM yyyy 'à' HH'h'mm''", { locale: frLocale });
+    const dateFormat = new Date(dateEn(date));
+    const formattedDateQuand = format(dateFormat, "'Le' EEEE dd MMMM yyyy'", { locale: frLocale });
+    const formattedDatehour = format(dateFormat, "HH'h'mm'", { locale: frLocale });
+
     const embedData = new EmbedBuilder()
-        .setAuthor({ name: title })
-        .setTitle(formattedDate)
-        .setColor(13373715)
-        .setDescription("Pour : <@&" + idRoleUser + ">")
+        .setTitle(title)
         .addFields(
             { name: "Description de l'événement :", value: description, inline: false },
-            { name: '✅ Liste des inscrits (' + listInscrit + ') :', value: listeDesInscrits || 'Aucun', inline: true }
+            { name: '__Quand ?__', value: formattedDateQuand, inline: true },
+            { name: '__A quel heure ?__', value: formattedDatehour, inline: true },
+            { name: '✅ Liste des inscrits (' + listInscrit + ') :', value: listeDesInscrits || 'Aucun', inline: false }
         );
 
     return embedData
@@ -106,4 +119,19 @@ export async function ButtonEmbedEvent(idevent) {
         );
 
     return buttons
+}
+
+// 20/06/2024 20:00
+function dateEn(dateInput) {
+    if (dateInput.includes('-')) {
+        const [date, heure] = dateInput.split(' ');
+        const [jour, mois, annee] = date.split('-');
+        const dateEn = `${annee}-${mois}-${jour} ${heure}`;
+        return dateEn;
+    } else {
+        const [date, heure] = dateInput.split(' ');
+        const [jour, mois, annee] = date.split('/');
+        const dateEn = `${annee}-${mois}-${jour} ${heure}`;
+        return dateEn;
+    }
 }

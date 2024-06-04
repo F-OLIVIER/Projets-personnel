@@ -28,9 +28,12 @@ function containerAppAdmin(data) {
             buttonBotEtat.textContent = 'Activer les fonctions automatique';
         }
         divBotEtat.appendChild(botEtat);
-        let explication = createHTMLElement('div', 'explicationbotetat');
-        explication.textContent = '(changement du message GvG + calcul des statistique gvg + re-initialisation des groupes en fin de GvG)';
-        divBotEtat.appendChild(explication);
+        let explicationactivation = createHTMLElement('div', 'explicationbotetat');
+        explicationactivation.innerHTML = "<u>Lors de l'activation des fonctions automatique :</u></br>- Effectue un reset avec calcul statistique de la précédente GvG</br>- Affiche un message comme quoi les gvg sont en drill et ne necessite pas d'inscription</br>- Désactive les resets automatique des mardi et des samedi";
+        divBotEtat.appendChild(explicationactivation);
+        let explicationdesactivation = createHTMLElement('div', 'explicationbotetat');
+        explicationdesactivation.innerHTML = "<u>Lors de la désactivation des fonctions automatique :</u></br>Change le message d'inscription pour ré-activé les inscriptions</br>Ré-active les resets automatique des mardi et des samedi";
+        divBotEtat.appendChild(explicationdesactivation);
 
         divBotEtat.appendChild(buttonBotEtat);
         subContainer.appendChild(divBotEtat);

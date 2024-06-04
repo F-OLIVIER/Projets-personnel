@@ -1,7 +1,7 @@
 // Fichier annexe
-import { DeleteEvent, IDmsgGvG, ListEvent, etatmsgGvG } from './database.js';
-import { TODOBotReaction, idCategorie } from './config.js';
-import { msgreactgvg } from './Reaction.js';
+import { DeleteEvent, ListEvent, etatmsgGvG } from './database.js';
+import { idCategorie } from './config.js';
+import { msgreactgvg } from './gvg.js';
 import { isMember } from './FuncData.js';
 import { Resetac } from './FuncRaid.js';
 import { client } from './Constant.js';
@@ -38,35 +38,8 @@ export async function cronResetMsgReaction(BotReaction) {
   const CurrentDate = new Date(Date.now() + (moment().tz("Europe/Paris").utcOffset() * 60 * 1000));
   var Allumage = await etatmsgGvG();
   if (Allumage[0].Allumage === 0) {
-
-    // gestion de la date futur pour le message
-    const now = moment();
-    const day = now.day(); // 2 mardi, 6 samedi
-
-    // si mardi, annonce du samedi et si Samedi, annonce du mardi
-    var futurdate;
-    if (day == 2) { // Cronjob du mardi (jour 2)
-      futurdate = moment().add(4, 'days');
-    } else if (day == 6) { // Cronjob du samedi (jour 6)
-      futurdate = moment().add(3, 'days');
-    } else {
-      console.log('Day 2 ou 6 non présent, mauvais reset');
-      return
-    }
-
-    // génére la date au bon format
-    const futurdateformate = new Date(futurdate + (moment().tz("Europe/Paris").utcOffset()));
-    // récupération du jour, de la date et du mois
-    const jour = futurdateformate.getDay();
-    const date = futurdateformate.getDate();
-    const mois = futurdateformate.getMonth();
-
-    // Suppression du message d'inscription GvG
-    var id_msg = await IDmsgGvG();
-    client.channels.cache.get(TODOBotReaction).messages.fetch(id_msg[0].IDMessageGvG).then(message => message.delete());
     Resetac();
-    msgreactgvg(BotReaction, jour, mois, date);
-    
+    msgreactgvg(BotReaction);
   } else {
     console.log("Fonction automatique resetmsgreact à l'arret : " + CurrentDate);
   }
