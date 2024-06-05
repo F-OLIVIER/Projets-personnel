@@ -100,7 +100,7 @@ func Createdb() {
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Naginata',125,20,0,'Infanterie','T3','./img/unit/naginata.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Gardes royaux de Perceval',225,24,0,'Infanterie','T4','./img/unit/percevalJav.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Piquiers du dragon noir',80,20,0,'Infanterie','T3','./img/unit/piquiersDragonNoir.jpg');
-        INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Piquiers préfectoraux',165,18,0,'Infanterie','T3','./img/unit/piquiersPrefectoraux.jpg');
+        INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Piquiers préfectoraux',165,18,1,'Infanterie','T3','./img/unit/piquiersPrefectoraux.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Prévôts marteleurs',150,18,1,'Infanterie','T3','./img/unit/prevotsMarteleurs.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Chavaliers de la Reine',295,30,0,'Infanterie','T5','./img/unit/queenKnight.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Rétiaires',305,30,0,'Infanterie','T5','./img/unit/retiaires.jpg');

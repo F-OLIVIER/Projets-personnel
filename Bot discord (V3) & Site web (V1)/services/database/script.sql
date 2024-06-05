@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS Users (
     Lvl INTEGER DEFAULT 0,
     Influence INTEGER DEFAULT 700,
     EtatInscription INTEGER DEFAULT 0,
-    NbEmojiInscription INTEGER DEFAULT 0,
     TrustIndicator INTEGER DEFAULT 0,
     MNDR INTEGER DEFAULT 0,
     NbGvGParticiped INTEGER DEFAULT 0,

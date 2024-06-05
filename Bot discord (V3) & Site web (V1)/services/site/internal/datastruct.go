@@ -92,3 +92,8 @@ type AdministrateBot struct {
 	ChangeUnit Unit   `json:"changeUnit"`
 	Resetnbgvg bool   `json:"resetnbgvg"`
 }
+
+type SocketMessage struct {
+	Type    string `json:"type"`
+	Content string `json:"content"`
+}

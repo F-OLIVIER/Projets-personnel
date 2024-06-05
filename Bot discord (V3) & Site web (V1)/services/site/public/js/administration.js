@@ -1,5 +1,5 @@
 import { adressAPI } from "./config.js";
-import { communBlock, createHTMLElement, fetchServer, fetchlogout, removeHTMLTags } from "./useful.js";
+import { communBlock, confirmwindows, createHTMLElement, fetchServer, fetchlogout, removeHTMLTags } from "./useful.js";
 
 export async function administration() {
     containerAppAdmin(await fetchServer('CheckAppAdmin'));
@@ -18,14 +18,17 @@ function containerAppAdmin(data) {
         let buttonBotEtat = createHTMLElement('button', 'buttonBotEtat');
         buttonBotEtat.type = 'button';
         buttonBotEtat.className = 'buttonBotEtat';
+        let allumage = ''
         if (data.Gestion.BotActivate) {
             botEtat.textContent = "Fonction automatique du bot discord actif";
             buttonBotEtat.value = "false";
             buttonBotEtat.textContent = 'Désactiver les fonctions automatique';
+            allumage = 'désactivé';
         } else {
             botEtat.textContent = "Fonction automatique (reset en fin de GvG) du bot discord inactif";
             buttonBotEtat.value = "true";
             buttonBotEtat.textContent = 'Activer les fonctions automatique';
+            allumage = 'activé';
         }
         divBotEtat.appendChild(botEtat);
         let explicationactivation = createHTMLElement('div', 'explicationbotetat');
@@ -230,7 +233,7 @@ function containerAppAdmin(data) {
         Container.innerHTML = '';
         Container.appendChild(subContainer);
 
-        addEventOnAllButton(data.ListUnit);
+        addEventOnAllButton(data.ListUnit, allumage);
 
     } else {
         fetchlogout();
@@ -238,24 +241,33 @@ function containerAppAdmin(data) {
 }
 
 let timerThrottlebutton = 0;
-function addEventOnAllButton(listUnit) {
+function addEventOnAllButton(listUnit, allumage) {
     // Activation/Désactivation du bot
-    document.getElementById('buttonBotEtat').addEventListener('click', (event) => {
+    document.getElementById('buttonBotEtat').addEventListener('click', async (event) => {
         event.preventDefault();
-        const now = new Date();
-        if (now - timerThrottlebutton > 500) {
-            timerThrottlebutton = now;
-            adminitrateBot('buttonBotEtat');
+        // fenetre de confirmation
+        const userConfirmed = await confirmwindows('Êtes-vous sûr de vouloir ' + allumage + ' les fonction automatique du bot ?');
+        if (userConfirmed) {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                adminitrateBot('buttonBotEtat');
+            }
         }
     });
 
     // Ajout d'une nouvelle unité
-    document.getElementById('formNewUnit').addEventListener('submit', (event) => {
+    document.getElementById('formNewUnit').addEventListener('submit', async (event) => {
         event.preventDefault();
-        const now = new Date();
-        if (now - timerThrottlebutton > 500) {
-            timerThrottlebutton = now;
-            adminitrateBot('buttonNewUnit');
+
+        // fenetre de confirmation
+        const userConfirmed = await confirmwindows('Confirmer la création de la nouvelle unité ?');
+        if (userConfirmed) {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                adminitrateBot('buttonNewUnit');
+            }
         }
     });
 
@@ -344,34 +356,49 @@ function addEventOnAllButton(listUnit) {
                 divChangeUnit.appendChild(formChangeUnit);
             }
 
-            document.getElementById('formchangeUnit').addEventListener('submit', (event) => {
+            document.getElementById('formchangeUnit').addEventListener('submit', async (event) => {
                 event.preventDefault();
-                const now = new Date();
-                if (now - timerThrottlebutton > 500) {
-                    timerThrottlebutton = now;
-                    adminitrateBot('buttonChangeUnit');
+                // fenetre de confirmation
+                const userConfirmed = await confirmwindows(`Confirmer la modification l'unité "${unitSelected.Unit_name}" ?`);
+                if (userConfirmed) {
+                    const now = new Date();
+                    if (now - timerThrottlebutton > 500) {
+                        timerThrottlebutton = now;
+                        adminitrateBot('buttonChangeUnit');
+                    }
                 }
             });
         }
     });
 
     // Ajouter une nouvelle arme (new class)
-    document.getElementById('buttonNewclass').addEventListener('click', (event) => {
+    document.getElementById('buttonNewclass').addEventListener('click', async (event) => {
         event.preventDefault();
-        const now = new Date();
-        if (now - timerThrottlebutton > 500) {
-            timerThrottlebutton = now;
-            adminitrateBot('buttonNewclass');
+        // fenetre de confirmation
+        if (document.getElementById('nameNewclass').value !== "") {
+            const userConfirmed = await confirmwindows(`Confirmer la modification la classe "${document.getElementById('nameNewclass').value}" ?`);
+            if (userConfirmed) {
+                const now = new Date();
+                if (now - timerThrottlebutton > 500) {
+                    timerThrottlebutton = now;
+                    adminitrateBot('buttonNewclass');
+                }
+            }
         }
     });
 
     // Reset des stat GvG (participé et total)
-    document.getElementById('buttonresetnbgvg').addEventListener('click', (event) => {
+    document.getElementById('buttonresetnbgvg').addEventListener('click', async (event) => {
         event.preventDefault();
-        const now = new Date();
-        if (now - timerThrottlebutton > 500) {
-            timerThrottlebutton = now;
-            adminitrateBot('buttonresetnbgvg');
+
+        // fenetre de confirmation
+        const userConfirmed = await confirmwindows('Êtes-vous sûr de vouloir ré-initilaiser les stats GvG ?');
+        if (userConfirmed) {
+            const now = new Date();
+            if (now - timerThrottlebutton > 500) {
+                timerThrottlebutton = now;
+                adminitrateBot('buttonresetnbgvg');
+            }
         }
     });
 }
@@ -398,10 +425,6 @@ async function adminitrateBot(option) {
             let createUnit = {};
             const inputvalue_name = document.getElementById('nameNewUnit').value
             createUnit.Unit_name = removeHTMLTags(inputvalue_name);
-            if (dataToSend.Unit_name !== inputvalue_name) {
-                alert("Les balises HTML ne sont pas autorisées.");
-                return
-            }
             createUnit.Unit_influence = document.getElementById('influNewUnit').value;
             if (dataToSend.Unit_influence > 500) {
                 alert("Influence impossible.");
@@ -463,10 +486,6 @@ async function adminitrateBot(option) {
             // changeUnit.Unit_name = removeHTMLTags(document.getElementById('selectChangeUnit').value);
             const inputvalue_name = document.getElementById('selectChangeUnit').value
             changeUnit.Unit_name = removeHTMLTags(inputvalue_name);
-            if (changeUnit.Unit_name !== inputvalue_name) {
-                alert("Les balises HTML ne sont pas autorisées.");
-                return
-            }
             changeUnit.Unit_influence = document.getElementById('changeUnitInfluence').value;
             if (changeUnit.Unit_influence > 500 || changeUnit.Unit_influence < 0) {
                 alert("Influence impossible.");

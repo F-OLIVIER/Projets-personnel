@@ -24,6 +24,7 @@ func UploadPicture(fileUpload multipart.File, header *multipart.FileHeader, file
 
 	if typeFile1 == "jpg" || typeFile2 == "jpeg" { // format jpeg/jpg
 		image, err := jpeg.Decode(fileUpload)
+		CheckErr("Decode jpeg (UploadFile annexe)", err)
 		fileLocal, err := os.Create(filePath)
 		CheckErr("OS.Create jpg/jpeg (UploadFile annexe)", err)
 		opt := jpeg.Options{
@@ -36,6 +37,7 @@ func UploadPicture(fileUpload multipart.File, header *multipart.FileHeader, file
 
 	} else if typeFile1 == "png" { // format png
 		image, err := png.Decode(fileUpload)
+		CheckErr("Decode png (UploadFile annexe)", err)
 		fileLocal, err := os.Create(filePath)
 		CheckErr("OS.Create png (UploadFile annexe)", err)
 		err = png.Encode(fileLocal, image)
@@ -45,6 +47,7 @@ func UploadPicture(fileUpload multipart.File, header *multipart.FileHeader, file
 
 	} else if typeFile1 == "gif" { // format gif
 		image, err := gif.DecodeAll(fileUpload)
+		CheckErr("Decode gif (UploadFile annexe)", err)
 		fileLocal, err := os.Create(filePath)
 		CheckErr("OS.Create gif (UploadFile annexe)", err)
 		err = gif.EncodeAll(fileLocal, image)
