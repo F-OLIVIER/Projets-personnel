@@ -61,7 +61,7 @@ export async function EmbedInscription(presents = [], absents = []) {
     .setTitle(":regional_indicator_g::regional_indicator_v::regional_indicator_g:")
     .setColor(13373715)
     .setDescription("Veuillez indiquer votre présence pour la prochaine GvG.")
-    .setThumbnail("https://i43.servimg.com/u/f43/15/76/70/95/embedi11.png")
+    .setThumbnail("https://i43.servimg.com/u/f43/15/76/70/95/poleax10.png")
     .addFields(
       { name: "Date de la prochaine GvG", value: dateGvG() + "\n\n", inline: false },
       { name: '✅ ' + nbpresent + ' __Présent(s)__', value: presents.length ? presents.join('\n') : 'Aucun', inline: true },
@@ -91,8 +91,8 @@ export async function tmpEmbedInscription() {
   const embedData = new EmbedBuilder()
     .setTitle(":regional_indicator_g::regional_indicator_v::regional_indicator_g:")
     .setColor(13373715)
-    .setDescription("Pas d'inscription au GvG actuellement, la prochaine gvg sera une gvg d'entrainement (drill)")
-    .setThumbnail("https://i43.servimg.com/u/f43/15/76/70/95/embedi11.png");
+    .setDescription("La prochaine GvG sera une GvG d'entrainement (aussi appelée drill).\nPar conséquent, les inscriptions ne sont pas demandées.")
+    .setThumbnail("https://i43.servimg.com/u/f43/15/76/70/95/spear10.png");
 
   return embedData
 }

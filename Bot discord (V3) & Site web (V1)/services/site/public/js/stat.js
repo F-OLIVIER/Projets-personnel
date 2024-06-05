@@ -252,12 +252,38 @@ function sortBy(option = '', order) {
 
     // Trier les éléments pour le critère spécifié
     statsArray.sort(function (a, b) {
-        const valueA = a.querySelector('.' + option).textContent.toUpperCase();
-        const valueB = b.querySelector('.' + option).textContent.toUpperCase();
-        if (order == 0) {
-            return (valueA < valueB) ? -1 : (valueA > valueB) ? 1 : 0;
+        let valueA = a.querySelector('.' + option).textContent.toUpperCase();
+        let valueB = b.querySelector('.' + option).textContent.toUpperCase();
+
+        // Convertir en nombre si possible
+        if (!isNaN(valueA) && !isNaN(valueB)) {
+            valueA = parseFloat(valueA);
+            valueB = parseFloat(valueB);
         } else {
-            return (valueA > valueB) ? -1 : (valueA < valueB) ? 1 : 0;
+            // Vérifier si les valeurs sont des dates au format JJ/MM/AAAA
+            const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
+            if (datePattern.test(valueA) && datePattern.test(valueB)) {
+                valueA = convertToDate(valueA);
+                valueB = convertToDate(valueB);
+            }
+        }
+
+        if (order == 0) {
+            if (valueA < valueB) {
+                return -1;
+            } else if (valueA > valueB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            if (valueA > valueB) {
+                return -1;
+            } else if (valueA < valueB) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     });
 
@@ -265,9 +291,15 @@ function sortBy(option = '', order) {
     while (statsContainer.firstChild) {
         statsContainer.removeChild(statsContainer.firstChild);
     }
+
     // Afficher le nouveau contenu
     statsArray.forEach(function (stat) {
         statsContainer.appendChild(stat);
     });
 }
 
+// Fonction pour convertir une date au format JJ/MM/AAAA en objet Date
+function convertToDate(dateString) {
+    const [day, month, year] = dateString.split('/').map(part => parseInt(part, 10));
+    return new Date(year, month - 1, day);
+}
