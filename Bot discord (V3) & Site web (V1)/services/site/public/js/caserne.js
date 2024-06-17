@@ -11,6 +11,11 @@ function containercaserne(data) {
         communBlock(data)
 
         let Container = document.getElementById('Container');
+
+        let avertissementsave = createHTMLElement('div', 'avertissementsavecaserne');
+        avertissementsave.textContent = 'Pensez à sauvegarder votre caserne en cliquant sur le bouton "Mettre à jour ma caserne" en bas de page';
+        Container.appendChild(avertissementsave);
+
         let caserne = createHTMLElement('div', 'caserne');
 
         let divInfanterie = createHTMLElement('div', 'divInfanterie');
@@ -112,7 +117,8 @@ function containercaserne(data) {
 
 function MAJCaserne(nbunit) {
     var boutonMAJCaserne = document.getElementById("MAJCaserne");
-    boutonMAJCaserne.addEventListener("click", function () {
+    boutonMAJCaserne.addEventListener("click", function (event) {
+        // event.preventDefault();
         const now = new Date();
         if (now - timerThrottlebutton > 500) {
             timerThrottlebutton = now;
@@ -156,7 +162,7 @@ function addUnit(data, listUnitInfanterie, listUnitDistant, listUnitCav, tier) {
             selecctlvl.style.borderRadius = '15px';
             selecctlvl.style.fontSize = '16px';
             selecctlvl.appendChild(defaultoption);
-            if (Currentunit.Unit_lvl !== "") {
+            if (Currentunit.Unit_lvl != "0") {
                 let optionAbsent = document.createElement("option");
                 optionAbsent.value = -1;
                 optionAbsent.text = 'Unité non débloqué';
@@ -188,6 +194,7 @@ function addUnit(data, listUnitInfanterie, listUnitDistant, listUnitCav, tier) {
                 selecctMaitrise.style.fontSize = '16px';
                 let defaultoption = document.createElement("option");
                 selecctMaitrise.appendChild(defaultoption);
+
                 for (let i = 0; i < listoption.length; i++) {
                     const element = listoption[i];
                     if (Currentunit.UserMaitrise == element[0]) { // ne maitrise pas
@@ -270,3 +277,4 @@ function sendDataMAJCaserne(nbunit) {
             console.error('Erreur lors de la récupération des données:', error);
         });
 }
+

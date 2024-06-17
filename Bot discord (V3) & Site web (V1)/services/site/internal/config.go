@@ -1,6 +1,6 @@
 package data
 
-const PORT = "8080" // port HTTP
+const PORT = "8080"
 
 const SITE_DOMAIN = "localhost"
 

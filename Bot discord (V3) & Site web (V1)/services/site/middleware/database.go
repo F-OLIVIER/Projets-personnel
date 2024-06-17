@@ -52,52 +52,31 @@ func UpdateCharacter(r *http.Request, uuid string, database *sql.DB) {
 		err := json.NewDecoder(r.Body).Decode(&newUserInfo)
 		CheckErr("Erreur de décodage JSON UpdateCharacter", err)
 
+		// Récupération de l'id de la classe d'arme
 		if newUserInfo.GameCharacter != "" {
-			stmt1, errdb := database.Prepare("SELECT ID FROM ListGameCharacter WHERE ClasseFR = ?")
-			CheckErr("1- Requete DB UpdateCharacter", errdb)
-			stmt1.QueryRow(newUserInfo.GameCharacter).Scan(&newUserInfo.GameCharacter_ID)
+			stmt, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = (SELECT ID FROM ListGameCharacter WHERE ClasseFR = ?) WHERE uuid = ?")
+			CheckErr("1- Requete DB UpdateCharacter classe", errdb)
+			stmt.Exec(newUserInfo.GameCharacter, uuid)
 		}
 
-		if newUserInfo.Influence != "" && newUserInfo.Lvl != "" && newUserInfo.GameCharacter != "" {
-			// les 3 sont saisies (Class + Lvl + Influence)
-			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Lvl = ?, Influence = ? WHERE uuid = ?")
-			CheckErr("2- Requete DB UpdateCharacter", errdb)
-			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Lvl, newUserInfo.Influence, uuid)
-		} else if newUserInfo.Influence != "" && newUserInfo.Lvl != "" {
-			// Lvl + Influence
-			stmt2, errdb := database.Prepare("UPDATE Users SET Lvl = ?, Influence = ? WHERE uuid = ?")
-			CheckErr("3- Requete DB UpdateCharacter", errdb)
-			stmt2.Exec(newUserInfo.Lvl, newUserInfo.Influence, uuid)
-		} else if newUserInfo.Influence != "" && newUserInfo.GameCharacter != "" {
-			// Class + Influence
-			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Influence = ? WHERE uuid = ?")
-			CheckErr("4- Requete DB UpdateCharacter", errdb)
-			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Influence, uuid)
-		} else if newUserInfo.Lvl != "" && newUserInfo.GameCharacter != "" {
-			// Class + Lvl
-			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Lvl = ? WHERE uuid = ?")
-			CheckErr("5- Requete DB UpdateCharacter", errdb)
-			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Lvl, uuid)
-		} else if newUserInfo.GameCharacter != "" {
-			// Class
-			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ? WHERE uuid = ?")
-			CheckErr("6- Requete DB UpdateCharacter", errdb)
-			stmt2.Exec(newUserInfo.GameCharacter_ID, uuid)
-		} else if newUserInfo.Lvl != "" {
-			// Lvl
+		// Mise à jour du level
+		if newUserInfo.Lvl != "" {
 			stmt2, errdb := database.Prepare("UPDATE Users SET Lvl = ? WHERE uuid = ?")
-			CheckErr("7- Requete DB UpdateCharacter", errdb)
+			CheckErr("2- Requete DB UpdateCharacter level", errdb)
 			stmt2.Exec(newUserInfo.Lvl, uuid)
-		} else if newUserInfo.Influence != "" {
-			// Influence
+		}
+
+		// Mise à jour de l'influence
+		if newUserInfo.Influence != "" {
 			stmt2, errdb := database.Prepare("UPDATE Users SET Influence = ? WHERE uuid = ?")
-			CheckErr("8- Requete DB UpdateCharacter", errdb)
+			CheckErr("3- Requete DB UpdateCharacter Influence", errdb)
 			stmt2.Exec(newUserInfo.Influence, uuid)
 		}
 
+		// Mise à jour de l'etat d'inscription (present / absent)
 		if newUserInfo.EtatInscription == 1 || newUserInfo.EtatInscription == 3 { // 1: s'incrit present, 3: s'inscrit absent
 			stmt3, errdb := database.Prepare("UPDATE Users SET EtatInscription = ? WHERE uuid = ?")
-			CheckErr("9- Requete DB UpdateCharacter", errdb)
+			CheckErr("4- Requete DB UpdateCharacter inscription", errdb)
 			stmt3.Exec(newUserInfo.EtatInscription, uuid)
 		}
 	}
@@ -259,14 +238,14 @@ func UploadInformationsBot(r *http.Request, database *sql.DB) {
 				defer file.Close()
 				UploadPicture(file, header, "./public/images/unit/"+header.Filename)
 				if formData.CreateUnit.Name != "" { // création d'une unité
-					createNewUnit(formData.CreateUnit, "./site/img/unit/"+header.Filename, database)
+					createNewUnit(formData.CreateUnit, "./img/unit/"+header.Filename, database)
 					message := data.SocketMessage{
 						Type:    "newunit",
 						Content: formData.CreateUnit.Name,
 					}
 					SendMessage(message)
 				} else if formData.ChangeUnit.Name != "" { // Update de l'image d'une unit
-					updateImgUnit(formData.ChangeUnit, "./site/img/unit/"+header.Filename, database)
+					updateImgUnit(formData.ChangeUnit, "./img/unit/"+header.Filename, database)
 				}
 			}
 
@@ -310,9 +289,12 @@ func createNewUnit(dataCreateUnit data.Unit, filepath string, database *sql.DB) 
 }
 
 func updateImgUnit(dataCreateUnit data.Unit, filepath string, database *sql.DB) {
-	stmt, err := database.Prepare(`UPDATE ListUnit SET InfuenceMax = ?, LvlMax = ? WHERE Unit = ?;`)
-	CheckErr("Update Allumage ActivateOrNotBotInDB ", err)
-	stmt.Exec(filepath, dataCreateUnit.Name)
+	if dataCreateUnit.Name != "" {
+		stmt, err := database.Prepare(`UPDATE ListUnit SET Img = ? WHERE Unit = ?;`)
+		CheckErr("Update Allumage ActivateOrNotBotInDB ", err)
+		fmt.Println("filepath, dataCreateUnit.ID", filepath, dataCreateUnit.ID)
+		stmt.Exec(filepath, dataCreateUnit.Name)
+	}
 }
 
 func updateDataUnit(dataCreateUnit data.Unit, database *sql.DB) {
@@ -329,9 +311,19 @@ func updateDataUnit(dataCreateUnit data.Unit, database *sql.DB) {
 	}
 
 	if dataCreateUnit.Maitrise != "" {
+		stmtMaitrise, errdb := database.Prepare("SELECT Maitrise FROM ListUnit WHERE Unit = ?")
+		CheckErr("4- Update Maitrise updateDataUnit", errdb)
+		var currentMaitrise, newMaitrise int
+		stmtMaitrise.QueryRow(dataCreateUnit.Name).Scan(&currentMaitrise)
+		if currentMaitrise == 0 {
+			newMaitrise = 1
+		} else {
+			newMaitrise = 0
+		}
+
 		stmt, err := database.Prepare(`UPDATE ListUnit SET Maitrise = ? WHERE Unit = ?;`)
-		CheckErr("Update Maitrise updateDataUnit ", err)
-		stmt.Exec(dataCreateUnit.Maitrise, dataCreateUnit.ID)
+		CheckErr("5- Update Maitrise updateDataUnit ", err)
+		stmt.Exec(newMaitrise, dataCreateUnit.Name)
 	}
 }
 

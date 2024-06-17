@@ -32,12 +32,12 @@ function containerAppAdmin(data) {
         }
         divBotEtat.appendChild(botEtat);
         let explicationactivation = createHTMLElement('div', 'explicationbotetat');
-        explicationactivation.innerHTML = `<u>Lors de l'activation des fonctions automatique :</u>
+        explicationactivation.innerHTML = `<u>Lors de la désactivation des fonctions automatique :</u>
         <li>Affiche un message comme quoi les gvg sont en drill et ne necessite pas d'inscription</li>
         <li>Désactive les resets automatique des mardi et des samedi</li>`;
         divBotEtat.appendChild(explicationactivation);
         let explicationdesactivation = createHTMLElement('div', 'explicationbotetat');
-        explicationdesactivation.innerHTML = `<u>Lors de la désactivation des fonctions automatique :</u>
+        explicationdesactivation.innerHTML = `<u>Lors de l'activation des fonctions automatique :</u>
         <li>Change le message d'inscription pour ré-activé les inscriptions</li>
         <li>Ré-active les resets automatique des mardi et des samedi</li>`;
         divBotEtat.appendChild(explicationdesactivation);
@@ -496,7 +496,7 @@ async function adminitrateBot(option) {
                 return
             }
             changeUnit.Unit_lvlMax = document.getElementById('changeUnitLvlMax').value;
-            if (changeUnit.Unit_influence > 50 || changeUnit.Unit_influence < 0) {
+            if (changeUnit.Unit_lvlMax > 50 || changeUnit.Unit_lvlMax < 0) {
                 alert("Level max d'unité impossible.");
                 return
             }

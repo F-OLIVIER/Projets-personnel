@@ -119,36 +119,50 @@ func MAJCaserne(r *http.Request, userID string, database *sql.DB) {
 	err := json.NewDecoder(r.Body).Decode(&newCaserne)
 	CheckErr("Erreur de décodage JSON MAJCaserne", err)
 
-	var setConditions []string       // Liste des colonnes à set
-	var updateValues []interface{}   // Liste des valeurs des colonnes Caserne
-	var updateMaitrise []interface{} // Liste des valeurs des colonnes CaserneMaitrise
+	var setConditionslevel, setConditionsmaitrise []string // Liste des colonnes à set
+	var updateLevel []interface{}                          // Liste des valeurs des colonnes Caserne
+	var updateMaitrise []interface{}                       // Liste des valeurs des colonnes CaserneMaitrise
 
 	for _, unit := range newCaserne.NewLvlUnitCaserne {
+		// mise à jour du level
 		if unit[1] != "" && strings.Contains(unit[0], "Unit") {
-			if unit[1] != "-1" { // Mise à jour du level de l'unité
-				setConditions = append(setConditions, unit[0]+" = ?") // Liste des colonnes à set
-				updateValues = append(updateValues, unit[1])          // Liste des valeurs des colonnes Caserne
-				updateMaitrise = append(updateMaitrise, unit[2])      // Liste des valeur des colonne CaserneMaitrise
-			} else { // Suppression de l'unité
-				setConditions = append(setConditions, unit[0]+" = ?") // Liste des colonnes à set
-				updateValues = append(updateValues, "")               // Liste des valeurs des colonnes Caserne
-				updateMaitrise = append(updateMaitrise, "")           // Liste des valeur des colonne CaserneMaitrise
+			if unit[1] == "-1" { // Suppression de l'unité
+				setConditionslevel = append(setConditionslevel, unit[0]+" = ?") // Liste des colonnes à set
+				updateLevel = append(updateLevel, "0")                          // Liste des valeurs des colonnes Caserne
+			} else { // Mise à jour du level et de la maitrise de l'unité
+				setConditionslevel = append(setConditionslevel, unit[0]+" = ?") // Liste des colonnes à set
+				updateLevel = append(updateLevel, unit[1])                      // Liste des valeurs des colonnes Caserne
+			}
+		}
+
+		// mise à jour de la maitrise
+		if unit[2] != "" && strings.Contains(unit[0], "Unit") {
+			if unit[1] == "-1" { // Suppression de l'unité
+				setConditionsmaitrise = append(setConditionsmaitrise, unit[0]+" = ?") // Liste des colonnes à set
+				updateMaitrise = append(updateMaitrise, "0")                          // Liste des valeur des colonnes CaserneMaitrise
+			} else { // Mise à jour du level et de la maitrise de l'unité
+				setConditionsmaitrise = append(setConditionsmaitrise, unit[0]+" = ?") // Liste des colonnes à set
+				updateMaitrise = append(updateMaitrise, unit[2])                      // Liste des valeur des colonnes CaserneMaitrise
 			}
 		}
 	}
 
-	if len(setConditions) > 0 {
+	// mise à jour du level
+	if len(setConditionslevel) > 0 {
 		// Mise à jours de la Caserne
-		query := "UPDATE Caserne SET " + strings.Join(setConditions, ", ") + " WHERE User_ID = ?"
+		query := "UPDATE Caserne SET " + strings.Join(setConditionslevel, ", ") + " WHERE User_ID = ?"
 		stmt, err := database.Prepare(query)
-		CheckErr("Requete db MAJCaserne :", err)
-		updateValues = append(updateValues, userID)
-		stmt.Exec(updateValues...)
+		CheckErr("Requete db MAJCaserne Caserne :", err)
+		updateLevel = append(updateLevel, userID)
+		stmt.Exec(updateLevel...)
+	}
 
+	// mise à jour de la maitrise
+	if len(setConditionsmaitrise) > 0 {
 		// Mise à jours de la CaserneMaitrise
-		queryMaitrise := "UPDATE CaserneMaitrise SET " + strings.Join(setConditions, ", ") + " WHERE User_ID = ?"
+		queryMaitrise := "UPDATE CaserneMaitrise SET " + strings.Join(setConditionsmaitrise, ", ") + " WHERE User_ID = ?"
 		stmtMaitrise, err := database.Prepare(queryMaitrise)
-		CheckErr("Requete db MAJCaserne :", err)
+		CheckErr("Requete db MAJCaserne CaserneMaitrise :", err)
 		updateMaitrise = append(updateMaitrise, userID)
 		stmtMaitrise.Exec(updateMaitrise...)
 	}

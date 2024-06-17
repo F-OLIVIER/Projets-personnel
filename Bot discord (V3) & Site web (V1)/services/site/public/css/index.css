@@ -306,6 +306,12 @@ button:hover {
 /* --------------- page /caserne --------------- */
 /* --------------------------------------------- */
 
+.avertissementsavecaserne {
+     width: 80%;
+     text-shadow: 1px 1px 5px rgba(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+     margin-bottom: 10px;
+}
+
 .caserne {
     display: flex;
     flex-direction: column;

@@ -10,151 +10,157 @@ import { TODOBotReaction } from "./config.js";
 import { } from 'dotenv/config';
 
 export async function createCommands() {
-    // Type 1 correspond à une Subcommand
-    // Type 2 correspond à un Subcommand Group
-    // Type 3 correspond à un String
-    // Type 4 correspond à un entier
-    // Type 5 correspond à un Boolean
-    // Type 6 correspond à un User (Un utilisateur Discord)
-    // Type 7 correspond à un Channel (Un canal Discord)
-    // Type 8 correspond à un Role (Un rôle Discord)
+    try {
+        console.log('│ • Started creating application (/) commands     │');
+        // Type 1 correspond à une Subcommand
+        // Type 2 correspond à un Subcommand Group
+        // Type 3 correspond à un String
+        // Type 4 correspond à un entier
+        // Type 5 correspond à un Boolean
+        // Type 6 correspond à un User (Un utilisateur Discord)
+        // Type 7 correspond à un Channel (Un canal Discord)
+        // Type 8 correspond à un Role (Un rôle Discord)
 
-    // -------------------------------------------------------------------
-    // ---------------------- Command utilisateur ------------------------
-    // -------------------------------------------------------------------
+        // -------------------------------------------------------------------
+        // ---------------------- Command utilisateur ------------------------
+        // -------------------------------------------------------------------
 
-    // Suppression d'une slash command de l'intégration discord
-    // await client.application.commands.delete('1244231829104361542'); // id de la slashcommand à supprimer
+        // Suppression d'une slash command de l'intégration discord
+        // await client.application.commands.delete('1244231829104361542'); // id de la slashcommand à supprimer
 
-    // Création de la commande '/visite_guidée'
-    await client.application.commands.create({
-        name: "visite_guidée",
-        description: "Le pére blaise vous fais visiter les fonctionnalités proposé par le bot discord",
-    });
+        // Création de la commande '/visite_guidée'
+        await client.application.commands.create({
+            name: "visite_guidée",
+            description: "Le pére blaise vous fais visiter les fonctionnalités proposé par le bot discord",
+        });
 
-    // Création de la commande '/data'
-    await client.application.commands.create({
-        name: 'data',
-        description: "Affiche les informations de l'utilisateur",
-    });
+        // Création de la commande '/data'
+        await client.application.commands.create({
+            name: 'data',
+            description: "Affiche les informations de l'utilisateur",
+        });
 
-    // Création de la commande '/guide'
-    await client.application.commands.create({
-        name: 'guide',
-        description: "Affiche des informations d'aide (tutorial, etc.) sur Conqueror's Blade",
-    });
+        // Création de la commande '/guide'
+        await client.application.commands.create({
+            name: 'guide',
+            description: "Affiche des informations d'aide (tutorial, etc.) sur Conqueror's Blade",
+        });
 
-    // Création de la commande '/site'
-    await client.application.commands.create({
-        name: 'site',
-        description: "Affiche le lien du site internet associé au bot",
-    });
+        // Création de la commande '/site'
+        await client.application.commands.create({
+            name: 'site',
+            description: "Affiche le lien du site internet associé au bot",
+        });
 
-    // Création de la commande '/class'
-    await client.application.commands.create({
-        name: "classe",
-        description: "Mettre à jour l'arme jouée avec votre héros",
-    });
+        // Création de la commande '/class'
+        await client.application.commands.create({
+            name: "classe",
+            description: "Mettre à jour l'arme jouée avec votre héros",
+        });
 
-    // Création de la commande '/lvl'
-    await client.application.commands.create({
-        name: 'level',
-        description: "Mettre à jour le level de votre héros",
-        options: [
-            {
-                name: 'lvl_number',
-                description: "level du héros",
-                type: 4, // entier
-                min_value: 0,
-                max_value: 100000,
-                required: true,
-            }
-        ]
-    });
+        // Création de la commande '/lvl'
+        await client.application.commands.create({
+            name: 'level',
+            description: "Mettre à jour le level de votre héros",
+            options: [
+                {
+                    name: 'lvl_number',
+                    description: "level du héros",
+                    type: 4, // entier
+                    min_value: 0,
+                    max_value: 100000,
+                    required: true,
+                }
+            ]
+        });
 
-    // Création de la commande '/influ'
-    await client.application.commands.create({
-        name: 'influence',
-        description: "Mettre à jour l'influence de votre héros",
-        options: [
-            {
-                name: 'influ_number',
-                description: "Influence du héros",
-                type: 4, // entier
-                min_value: 700,
-                max_value: 1000,
-                required: true,
-            }
-        ]
-    });
+        // Création de la commande '/influ'
+        await client.application.commands.create({
+            name: 'influence',
+            description: "Mettre à jour l'influence de votre héros",
+            options: [
+                {
+                    name: 'influ_number',
+                    description: "Influence du héros",
+                    type: 4, // entier
+                    min_value: 700,
+                    max_value: 1000,
+                    required: true,
+                }
+            ]
+        });
 
-    // -------------------------------------------------------------------
-    // ------------------------ Command Officier -------------------------
-    // -------------------------------------------------------------------
+        // -------------------------------------------------------------------
+        // ------------------------ Command Officier -------------------------
+        // -------------------------------------------------------------------
 
-    // Création de la commande '/nombre_inscription_prochaine_gvg'
-    await client.application.commands.create({
-        name: "officier_nombre_inscript",
-        description: "Affiche le nombre de joueur inscrit pour la prochaine GvG (réservé aux officier)",
-    });
+        // Création de la commande '/nombre_inscription_prochaine_gvg'
+        await client.application.commands.create({
+            name: "officier_nombre_inscrits",
+            description: "Affiche le nombre de joueur inscrit pour la prochaine GvG (réservé aux officier)",
+        });
 
-    // Création de la commande '/liste_inscrit'
-    await client.application.commands.create({
-        name: 'officier_liste_inscrits',
-        description: "Affiche la liste des pseudo des joueurs inscrit pour la prochaine GvG (réservé aux officier)",
-    });
+        // Création de la commande '/liste_inscrit'
+        await client.application.commands.create({
+            name: 'officier_liste_inscrits',
+            description: "Affiche la liste des pseudo des joueurs inscrit pour la prochaine GvG (réservé aux officier)",
+        });
 
-    // Création de la commande '/non_inscrit_GvG'
-    await client.application.commands.create({
-        name: 'officier_liste_non_inscrits',
-        description: "Affiche la liste des pseudo des joueurs non inscrit pour la prochaine GvG (réservé aux officier)",
-    });
+        // Création de la commande '/non_inscrit_GvG'
+        await client.application.commands.create({
+            name: 'officier_liste_non_inscrits',
+            description: "Affiche la liste des pseudo des joueurs non inscrit pour la prochaine GvG (réservé aux officier)",
+        });
 
-    // Création de la commande '/créer_un_événement'
-    await client.application.commands.create({
-        name: "officier_créer_un_événement",
-        description: "Permet de créer un événement (créé dans le canal dans lequel vous exécutez cette commande).",
-    });
+        // Création de la commande '/créer_un_événement'
+        await client.application.commands.create({
+            name: "officier_créer_un_événement",
+            description: "Permet de créer un événement (créé dans le canal dans lequel vous exécutez cette commande).",
+        });
 
-    // -------------------------------------------------------------------
-    // ---------------------- Command admin du bot -----------------------
-    // -------------------------------------------------------------------
+        // -------------------------------------------------------------------
+        // ---------------------- Command admin du bot -----------------------
+        // -------------------------------------------------------------------
 
-    // Création de la commande '/raidreset' avec les 3 options possible ("sc", "ac" et "raz")
-    await client.application.commands.create({
-        name: 'admin_raidreset',
-        description: "reset manuel d'un raid (réservé aux admin du bot)",
-        options: [
-            {
-                name: 'option_reset',
-                description: "Choisissez une option de reset",
-                type: 3, // 3 correspond à une option de type chaîne de texte
-                required: true,
-                choices: [
-                    {
-                        name: "Sans calcul statistique",
-                        value: "sc"
-                    },
-                    {
-                        name: "Avec calcul statistique",
-                        value: "ac"
-                    },
-                    {
-                        name: "Remise à zéro de la base de données",
-                        value: "raz"
-                    }
-                ]
-            }
-        ]
-    });
+        // Création de la commande '/raidreset' avec les 3 options possible ("sc", "ac" et "raz")
+        await client.application.commands.create({
+            name: 'admin_raidreset',
+            description: "reset manuel d'un raid (réservé aux admin du bot)",
+            options: [
+                {
+                    name: 'option_reset',
+                    description: "Choisissez une option de reset",
+                    type: 3, // 3 correspond à une option de type chaîne de texte
+                    required: true,
+                    choices: [
+                        {
+                            name: "Sans calcul statistique",
+                            value: "sc"
+                        },
+                        {
+                            name: "Avec calcul statistique",
+                            value: "ac"
+                        },
+                        {
+                            name: "Remise à zéro de la base de données",
+                            value: "raz"
+                        }
+                    ]
+                }
+            ]
+        });
 
-    // Création de la commande '/resetmsggvg'
-    // réalise en même temps le reset gvg sans calcul
-    await client.application.commands.create({
-        name: 'admin_resetmsggvg',
-        description: "reset manuel du message de reaction d'inscription GvG (réservé aux admin du bot)",
-    });
+        // Création de la commande '/resetmsggvg'
+        // réalise en même temps le reset gvg sans calcul
+        await client.application.commands.create({
+            name: 'admin_resetmsggvg',
+            description: "reset manuel du message de reaction d'inscription GvG (réservé aux admin du bot)",
+        });
 
+        console.log('│ • Successfully created application (/) commands │');
+    } catch (error) {
+        console.error('Error created application (/) commands :\n', error);
+    }
 }
 
 // -------------------------------------------------------------------

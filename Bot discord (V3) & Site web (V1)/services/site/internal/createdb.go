@@ -60,7 +60,7 @@ func Createdb() {
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Fortebraccio',235,24,0,'Infanterie','T4','./img/unit/piquiersFortebraccio.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Prévôts hallebardiers',230,24,1,'Infanterie','T4','./img/unit/prevot_hallebardier.PNG');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Gardes du palais',235,24,1,'Infanterie','T4','./img/unit/gardesPalais.jpg');
-        INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Azaps',240,24,0,'Infanterie','T4','./img/unit/azaps.jpg');
+        INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Azaps',240,24,1,'Infanterie','T4','./img/unit/azaps.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Tseregs',235,24,0,'Infanterie','T4','./img/unit/tseregs.jpg');
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Pillard fendeurs',240,24,0,'Infanterie','T4','./img/unit/pilardsFendeurs.jpg');	
         INSERT INTO ListUnit(Unit,InfuenceMax,LvlMax,Maitrise,TypeUnit,ForceUnit,Img) VALUES('Housecarls',240,24,0,'Infanterie','T4','./img/unit/housecarls.jpg');

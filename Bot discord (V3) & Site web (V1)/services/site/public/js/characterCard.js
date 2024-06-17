@@ -79,6 +79,7 @@ function containerCharacterCard(data) {
         personnage.appendChild(changeInflu);
 
         let buttonMAJpersonnage = createHTMLElement('button', 'buttonMAJpersonnage');
+        buttonMAJpersonnage.type = "submit";
         buttonMAJpersonnage.textContent = "Mettre à jour mon personnage"
         personnage.appendChild(buttonMAJpersonnage);
         divMAJ.appendChild(personnage);
@@ -90,31 +91,37 @@ function containerCharacterCard(data) {
         infoGvG.appendChild(titleinfoGvG);
         let etatInscripted = document.createElement('div');
         let listButton = createHTMLElement('div', 'listButton');
-        if (data.UserInfo.EtatInscription === 0 || data.UserInfo.EtatInscription === -1) {
-            etatInscripted.textContent = "⁉️ Vous n'éte pas inscrit pour la prochaine GvG";
-            // button present
-            let buttonPresent = createHTMLElement('button', 'inscriptedPresent');
-            buttonPresent.textContent = "M'inscrire présent"
-            listButton.appendChild(buttonPresent);
-            // button absent
-            let buttonAbsent = createHTMLElement('button', 'inscriptedAbsent');
-            buttonAbsent.textContent = "M'inscrire absent"
-            listButton.appendChild(buttonAbsent);
-        } else if (data.UserInfo.EtatInscription == 1) {
-            etatInscripted.textContent = "✅ Inscrit présent pour la prochaine GvG";
-            // button absent
-            let buttonAbsent = createHTMLElement('button', 'inscriptedAbsent');
-            buttonAbsent.textContent = "M'inscrire absent"
-            listButton.appendChild(buttonAbsent);
-        } else if (data.UserInfo.EtatInscription == 3) {
-            etatInscripted.textContent = "❌ inscrit absent pour la prochaine GvG";
-            // button present
-            let buttonPresent = createHTMLElement('button', 'inscriptedPresent');
-            buttonPresent.textContent = "M'inscrire présent"
-            listButton.appendChild(buttonPresent);
+        if (data.Gestion.BotActivate) {
+            if (data.UserInfo.EtatInscription === 0 || data.UserInfo.EtatInscription === -1) {
+                etatInscripted.textContent = "⁉️ Vous n'éte pas inscrit pour la prochaine GvG";
+                // button present
+                let buttonPresent = createHTMLElement('button', 'inscriptedPresent');
+                buttonPresent.textContent = "M'inscrire présent"
+                listButton.appendChild(buttonPresent);
+                // button absent
+                let buttonAbsent = createHTMLElement('button', 'inscriptedAbsent');
+                buttonAbsent.textContent = "M'inscrire absent"
+                listButton.appendChild(buttonAbsent);
+            } else if (data.UserInfo.EtatInscription == 1) {
+                etatInscripted.textContent = "✅ Inscrit présent pour la prochaine GvG";
+                // button absent
+                let buttonAbsent = createHTMLElement('button', 'inscriptedAbsent');
+                buttonAbsent.textContent = "M'inscrire absent"
+                listButton.appendChild(buttonAbsent);
+            } else if (data.UserInfo.EtatInscription == 3) {
+                etatInscripted.textContent = "❌ inscrit absent pour la prochaine GvG";
+                // button present
+                let buttonPresent = createHTMLElement('button', 'inscriptedPresent');
+                buttonPresent.textContent = "M'inscrire présent"
+                listButton.appendChild(buttonPresent);
+            }
+        } else {
+            etatInscripted.textContent = "Pas d'inscription pour les GvG actuellement";
         }
         infoGvG.appendChild(etatInscripted);
-        infoGvG.appendChild(listButton);
+        if (data.Gestion.BotActivate) {
+            infoGvG.appendChild(listButton);
+        }
 
         let nbGvG = document.createElement('div');
         nbGvG.textContent = 'Nombre de gvg participé : ' + data.UserInfo.NbGvGParticiped;
@@ -126,19 +133,21 @@ function containerCharacterCard(data) {
         subcontainer.appendChild(divMAJ);
         container.appendChild(subcontainer);
 
-        document.getElementById('buttonMAJpersonnage').addEventListener('click', () => {
+        document.getElementById('buttonMAJpersonnage').addEventListener('click', (event) => {
+            event.preventDefault();
             majPersonnage();
         });
-
-        if (document.getElementById('inscriptedPresent')) {
-            document.getElementById('inscriptedPresent').addEventListener('click', () => {
-                changeInscription(true);
-            });
-        }
-        if (document.getElementById('inscriptedAbsent')) {
-            document.getElementById('inscriptedAbsent').addEventListener('click', () => {
-                changeInscription(false);
-            });
+        if (data.Gestion.BotActivate) {
+            if (document.getElementById('inscriptedPresent')) {
+                document.getElementById('inscriptedPresent').addEventListener('click', () => {
+                    changeInscription(true);
+                });
+            }
+            if (document.getElementById('inscriptedAbsent')) {
+                document.getElementById('inscriptedAbsent').addEventListener('click', () => {
+                    changeInscription(false);
+                });
+            }
         }
 
     } else {
@@ -183,17 +192,16 @@ function changeInscription(incripted) {
     fetchData(dataToSend)
 }
 
-function fetchData(dataToSend) {
-    fetch(adressAPI + 'updateCharacterCard', {
+async function fetchData(dataToSend) {
+    await fetch(adressAPI + 'updateUserCard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(dataToSend),
-    })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des données:', error);
-        });
+    }).catch(error => {
+        console.error('Erreur lors du fetch :', error);
+    });
 
     window.location.href = '/characterCard';
 }

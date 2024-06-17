@@ -16,6 +16,7 @@ import { socket } from './socket.js';
 import { } from 'dotenv/config';
 import { CronJob } from 'cron';
 import moment from 'moment-timezone';
+import { PermissionsBitField } from 'discord.js';
 
 client.login(process.env.TOKEN);
 client.on('error', (error) => { console.error('\nUne erreur est survenue :\n', error); });
@@ -32,26 +33,25 @@ export let BotChanOfficier;
 
 // definition des chan utilisé par le bot
 client.on('ready', async () => {
-  console.log(`╭──────────────────────────────────────────────╮
-│        Bot starting up, please wait ...      │
-│──────────────────────────────────────────────│
-│ • Create command discord in process          │`);
+  console.log(`╭─────────────────────────────────────────────────╮
+│         Bot starting up, please wait ...        │
+│─────────────────────────────────────────────────│`);
   await createCommands();
-  console.log('│ • Create db user in process                  │');
+  console.log('│ • Create db user in process                     │');
   await createuser();
 
   // Création des channels
   BotChan = client.channels.cache.get(TODOBotChan);
   BotChanOfficier = client.channels.cache.get(TODOBotChanOfficier);
   const BotReaction = client.channels.cache.get(TODOBotReaction);
-  console.log('│ • Initializing automatic function            │');
+  console.log('│ • Initializing automatic function               │');
   TaskHandle(BotReaction);
-  console.log('│ • Initializing golang communication          │');
+  console.log('│ • Initializing golang communication             │');
   socket(BotReaction);
-  console.log(`│──────────────────────────────────────────────│
-│              Start-up completed              │
-│                 Bot ready !                  │
-╰──────────────────────────────────────────────╯\n`);
+  console.log(`│─────────────────────────────────────────────────│
+│               Start-up completed                │
+│                   Bot ready !                   │
+╰─────────────────────────────────────────────────╯\n`);
 });
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -161,6 +161,27 @@ client.on('messageCreate', async message => {
   //     console.error('Error sending message:', err);
   //   });
   // }
+
+  // --------------------------------------------
+  // permet de vérifier les autorisations du bot
+  // --------------------------------------------
+  if (message.content === '!check_perms') {
+    const botMember = await message.guild.members.fetch(client.user.id);
+    const requiredPerms = [
+      PermissionsBitField.Flags.Administrator,
+      PermissionsBitField.Flags.ManageGuild,
+      PermissionsBitField.Flags.UseApplicationCommands
+    ];
+
+    const missingPerms = requiredPerms.filter(perm => !botMember.permissions.has(perm));
+
+    if (missingPerms.length > 0) {
+      await message.author.send(`Missing permissions: ${missingPerms.join(', ')}`);
+    } else {
+      await message.author.send('All required permissions are granted.');
+    }
+    message.delete();
+  }
 
 });
 
@@ -392,8 +413,8 @@ client.on('interactionCreate', async (interaction) => {
   // ---- Command Officier ----
   // --------------------------
 
-  // interaction affichage du nombre d'inscrits, Command /officier_nombre_inscript
-  if (interaction.commandName === "officier_nombre_inscript") {
+  // interaction affichage du nombre d'inscrits, Command /officier_nombre_inscrits
+  if (interaction.commandName === "officier_nombre_inscrits") {
     if (isOfficier(interaction.user.id)) {
       cmdnb(interaction.user.id);
       interaction.reply({

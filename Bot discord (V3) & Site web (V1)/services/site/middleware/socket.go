@@ -7,8 +7,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrader = websocket.Upgrader{}
-
 func SendMessage(msg data.SocketMessage) error {
 	conn, _, err := websocket.DefaultDialer.Dial("ws://localhost:8081", nil)
 	if err != nil {

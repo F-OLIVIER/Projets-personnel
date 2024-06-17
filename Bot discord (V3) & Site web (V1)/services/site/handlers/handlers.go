@@ -114,15 +114,20 @@ func ApiWithoutReturnHandler(w http.ResponseWriter, r *http.Request) {
 					case "/api/UpdateAdmin":
 						utils.UpdateAdministration(r, database)
 
-					case "/api/updateCharacterCard":
-						utils.UpdateCharacter(r, cookie.Value, database)
-
 					case "/api/saveGroupInDB":
 						utils.SaveCreateGroup(r, database)
 
 					default:
-						fmt.Println("\nError r.URL.Path in ApiReturnHandler : ", r.URL.Path)
+						fmt.Println("\nError r.URL.Path in ApiReturnHandler (officier) : ", r.URL.Path)
 					}
+				}
+
+				switch r.URL.Path {
+				case "/api/updateusercard":
+					utils.UpdateCharacter(r, cookie.Value, database)
+
+				default:
+					fmt.Println("\nError r.URL.Path in ApiReturnHandler (user) : ", r.URL.Path)
 				}
 			}
 		}
@@ -160,8 +165,9 @@ func ApiHandler(w http.ResponseWriter, r *http.Request) {
 					DiscordPhoto:    DiscordPhoto,
 				}
 				gestion := &data.Gestion{
-					Logged:   true,
-					Officier: officier,
+					Logged:      true,
+					Officier:    officier,
+					BotActivate: utils.BotActivation(database),
 				}
 				sendHTML = &data.SendHTML{
 					UserInfo: *userInfo,

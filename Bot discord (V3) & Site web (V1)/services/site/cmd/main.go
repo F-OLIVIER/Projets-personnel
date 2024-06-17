@@ -20,22 +20,33 @@ func main() {
 	http.HandleFunc("/discord", handlers.DiscordHandler)
 	http.HandleFunc("/api/discord", handlers.DiscordApiHandler)
 
-	// page user connected/autorised
-	http.HandleFunc("/api/home", handlers.ApiHandler)
-	http.HandleFunc("/api/charactercard", handlers.ApiHandler)
-	http.HandleFunc("/api/caserne", handlers.ApiHandler)
-	http.HandleFunc("/api/majcaserne", handlers.ApiHandler)
-	http.HandleFunc("/api/creategroup", handlers.ApiHandler)
-	http.HandleFunc("/api/chargergrouptypeatt", handlers.ApiHandler)
-	http.HandleFunc("/api/chargergrouptypedef", handlers.ApiHandler)
-	http.HandleFunc("/api/CheckAppAdmin", handlers.ApiHandler)
-	http.HandleFunc("/api/statGvG", handlers.ApiHandler)
+	// Routes utilisant handlers.ApiHandler
+	apiHandlerRoutes := []string{
+		"/api/home",
+		"/api/charactercard",
+		"/api/caserne",
+		"/api/majcaserne",
+		"/api/creategroup",
+		"/api/chargergrouptypeatt",
+		"/api/chargergrouptypedef",
+		"/api/CheckAppAdmin",
+		"/api/statGvG",
+	}
+	for _, endpoint := range apiHandlerRoutes {
+		http.HandleFunc(endpoint, handlers.ApiHandler)
+	}
 
-	http.HandleFunc("/api/logout", handlers.ApiWithoutReturnHandler)
-	http.HandleFunc("/api/updateCharacterCard", handlers.ApiWithoutReturnHandler)
-	http.HandleFunc("/api/saveGroupInDB", handlers.ApiWithoutReturnHandler)
-	http.HandleFunc("/api/UpdateAdmin", handlers.ApiWithoutReturnHandler)
-	http.HandleFunc("/api/adminitrateBot", handlers.ApiWithoutReturnHandler)
+	// Routes utilisant handlers.ApiWithoutReturnHandler
+	apiWithoutReturnHandlerRoutes := []string{
+		"/api/logout",
+		"/api/updateUserCard",
+		"/api/saveGroupInDB",
+		"/api/UpdateAdmin",
+		"/api/adminitrateBot",
+	}
+	for _, endpoint := range apiWithoutReturnHandlerRoutes {
+		http.HandleFunc(endpoint, handlers.ApiWithoutReturnHandler)
+	}
 
 	// Appel des fichiers annexes et les mettres en cache navigateur client autmatiquement
 	cssHandler := http.StripPrefix("/css/", http.FileServer(http.Dir("./public/css/")))
