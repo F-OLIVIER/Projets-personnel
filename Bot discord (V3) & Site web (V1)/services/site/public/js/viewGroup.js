@@ -144,28 +144,42 @@ function containerviewGroup(data) {
         let scripthead = document.createElement('script');
         scripthead.src = "https://files.codepedia.info/files/uploads/iScripts/html2canvas.js";
         document.getElementById('head').appendChild(scripthead);
+        
         let script = document.createElement('script');
         script.src = "https://html2canvas.hertzen.com/dist/html2canvas.js";
         container.appendChild(script);
-
+        
         let buttonDownloadGroup = createHTMLElement('div', 'buttonDownloadGroup');
         buttonDownloadGroup.textContent = "Télécharger l'image des groupes";
         containerGroupe.appendChild(buttonDownloadGroup);
+        
         buttonDownloadGroup.addEventListener('click', function () {
             const now = new Date();
             if (now - timerThrottlebutton > 500) {
                 timerThrottlebutton = now;
-                html2canvas(viewgroup, { allowTaint: true }).then(function (canvas) {
+
+                // Appliquer la largeur minimale à la div
+                let originalWidth = viewgroup.style.width;
+                viewgroup.style.minWidth = '2250px';
+
+                // Utiliser html2canvas pour capturer la div
+                html2canvas(viewgroup, {
+                    allowTaint: true,
+                    useCORS: true
+                }).then(function (canvas) {
+                    // Réinitialiser la largeur de la div après la capture
+                    viewgroup.style.width = originalWidth;
+
                     var link = document.createElement("a");
                     document.body.appendChild(link);
-                    const now = new Date(Date.now());
-                    console.log("now : ", now.getMonth());
                     const date = String(now.getDate()).padStart(2, '0') + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + now.getFullYear();
                     link.download = date + "_groupeGvG.jpg";
                     link.href = canvas.toDataURL();
                     link.target = '_blank';
                     link.click();
                 });
+                
+                viewgroup.style.minWidth = '';
             }
         });
 

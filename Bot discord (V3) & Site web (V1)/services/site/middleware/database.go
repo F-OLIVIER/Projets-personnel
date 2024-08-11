@@ -52,31 +52,52 @@ func UpdateCharacter(r *http.Request, uuid string, database *sql.DB) {
 		err := json.NewDecoder(r.Body).Decode(&newUserInfo)
 		CheckErr("Erreur de décodage JSON UpdateCharacter", err)
 
-		// Récupération de l'id de la classe d'arme
 		if newUserInfo.GameCharacter != "" {
-			stmt, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = (SELECT ID FROM ListGameCharacter WHERE ClasseFR = ?) WHERE uuid = ?")
-			CheckErr("1- Requete DB UpdateCharacter classe", errdb)
-			stmt.Exec(newUserInfo.GameCharacter, uuid)
+			stmt1, errdb := database.Prepare("SELECT ID FROM ListGameCharacter WHERE ClasseFR = ?")
+			CheckErr("1- Requete DB UpdateCharacter", errdb)
+			stmt1.QueryRow(newUserInfo.GameCharacter).Scan(&newUserInfo.GameCharacter_ID)
 		}
 
-		// Mise à jour du level
-		if newUserInfo.Lvl != "" {
+		if newUserInfo.Influence != "" && newUserInfo.Lvl != "" && newUserInfo.GameCharacter != "" {
+			// les 3 sont saisies (Class + Lvl + Influence)
+			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Lvl = ?, Influence = ? WHERE uuid = ?")
+			CheckErr("2- Requete DB UpdateCharacter", errdb)
+			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Lvl, newUserInfo.Influence, uuid)
+		} else if newUserInfo.Influence != "" && newUserInfo.Lvl != "" {
+			// Lvl + Influence
+			stmt2, errdb := database.Prepare("UPDATE Users SET Lvl = ?, Influence = ? WHERE uuid = ?")
+			CheckErr("3- Requete DB UpdateCharacter", errdb)
+			stmt2.Exec(newUserInfo.Lvl, newUserInfo.Influence, uuid)
+		} else if newUserInfo.Influence != "" && newUserInfo.GameCharacter != "" {
+			// Class + Influence
+			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Influence = ? WHERE uuid = ?")
+			CheckErr("4- Requete DB UpdateCharacter", errdb)
+			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Influence, uuid)
+		} else if newUserInfo.Lvl != "" && newUserInfo.GameCharacter != "" {
+			// Class + Lvl
+			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ?, Lvl = ? WHERE uuid = ?")
+			CheckErr("5- Requete DB UpdateCharacter", errdb)
+			stmt2.Exec(newUserInfo.GameCharacter_ID, newUserInfo.Lvl, uuid)
+		} else if newUserInfo.GameCharacter != "" {
+			// Class
+			stmt2, errdb := database.Prepare("UPDATE Users SET GameCharacter_ID = ? WHERE uuid = ?")
+			CheckErr("6- Requete DB UpdateCharacter", errdb)
+			stmt2.Exec(newUserInfo.GameCharacter_ID, uuid)
+		} else if newUserInfo.Lvl != "" {
+			// Lvl
 			stmt2, errdb := database.Prepare("UPDATE Users SET Lvl = ? WHERE uuid = ?")
-			CheckErr("2- Requete DB UpdateCharacter level", errdb)
+			CheckErr("7- Requete DB UpdateCharacter", errdb)
 			stmt2.Exec(newUserInfo.Lvl, uuid)
-		}
-
-		// Mise à jour de l'influence
-		if newUserInfo.Influence != "" {
+		} else if newUserInfo.Influence != "" {
+			// Influence
 			stmt2, errdb := database.Prepare("UPDATE Users SET Influence = ? WHERE uuid = ?")
-			CheckErr("3- Requete DB UpdateCharacter Influence", errdb)
+			CheckErr("8- Requete DB UpdateCharacter", errdb)
 			stmt2.Exec(newUserInfo.Influence, uuid)
 		}
 
-		// Mise à jour de l'etat d'inscription (present / absent)
 		if newUserInfo.EtatInscription == 1 || newUserInfo.EtatInscription == 3 { // 1: s'incrit present, 3: s'inscrit absent
 			stmt3, errdb := database.Prepare("UPDATE Users SET EtatInscription = ? WHERE uuid = ?")
-			CheckErr("4- Requete DB UpdateCharacter inscription", errdb)
+			CheckErr("9- Requete DB UpdateCharacter", errdb)
 			stmt3.Exec(newUserInfo.EtatInscription, uuid)
 		}
 	}
@@ -114,6 +135,32 @@ func ListInscriptedUsers(database *sql.DB) (UsersIncripted []data.UserInfo) {
 
 	// fmt.Println("UsersIncripted : \n", UsersIncripted)
 	return UsersIncripted
+}
+
+func AllCaserne(database *sql.DB) (ListInscripted []data.UserInfo) {
+	listUnit, err := database.Prepare(`SELECT ID, DiscordName, Lvl, Influence FROM Users;`)
+	CheckErr("1- Requete DB fonction AllCaserne", err)
+	rows, err := listUnit.Query()
+	CheckErr("2- Requete DB fonction AllCaserne", err)
+	for rows.Next() {
+		var user data.UserInfo
+		err = rows.Scan(&user.ID, &user.DiscordUsername, &user.Lvl, &user.Influence)
+		CheckErr("3- Requete DB fonction AllCaserne", err)
+
+		listUnitUser := CaserneUser(strconv.Itoa(user.ID), database)
+		var newListunitUser []data.Unit
+		for i := 0; i < len(listUnitUser); i++ {
+			if listUnitUser[i].Lvl == "" {
+				listUnitUser[i].Lvl = "0"
+			}
+			newListunitUser = append(newListunitUser, listUnitUser[i])
+		}
+		user.UserCaserne = newListunitUser
+		ListInscripted = append(ListInscripted, user)
+	}
+
+	// fmt.Println("ListInscripted : \n", ListInscripted)
+	return ListInscripted
 }
 
 func GroupGvG(database *sql.DB, nameTable string) (listUserAlreadyRegistered []data.UserGvG) {

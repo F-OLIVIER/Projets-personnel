@@ -54,11 +54,11 @@ export function Resetac() {
                                                   WHEN MNDR >= 6 THEN 1
                                                   ELSE 0 END,
                         DateLastGvGParticiped = CASE
-                                                  WHEN EtatInscription IN (1, 2, 3) THEN ?
+                                                  WHEN EtatInscription IN (1, 2) THEN ?
                                                   ELSE DateLastGvGParticiped
                                                 END,
                         NbGvGParticiped = NbGvGParticiped + CASE
-                                                  WHEN EtatInscription IN (1, 2, 3) THEN 1
+                                                  WHEN EtatInscription IN (1, 2) THEN 1
                                                   ELSE 0
                                                 END,
                         MNDR = 0,

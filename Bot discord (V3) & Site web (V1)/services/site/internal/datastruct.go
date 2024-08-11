@@ -47,6 +47,7 @@ type Unit struct {
 }
 
 type ChangeUnitCaserne struct {
+	Userid            string     `json:"iduser"`
 	NewLvlUnitCaserne [][]string `json:"listNewLvlUnitCaserne"`
 }
 

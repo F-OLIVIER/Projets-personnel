@@ -7,6 +7,7 @@ import { viewgroup } from "./viewGroup.js";
 import { caserne } from "./caserne.js";
 import { home } from "./home.js";
 import { stat } from "./stat.js";
+import { consulcaserne } from "./consulcaserne.js";
 
 let path = window.location.pathname;
 switch (path) {
@@ -54,6 +55,10 @@ switch (path) {
 
     case '/stat':
         stat();
+        break;
+
+    case '/consulcaserne':
+        consulcaserne();
         break;
 
     default:

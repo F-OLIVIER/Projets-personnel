@@ -59,6 +59,15 @@ function containerhome(data) {
       buttonAppAdmin.textContent = "Page d'administration";
       linkAppAdmin.appendChild(buttonAppAdmin);
       subcontainerOfficier.appendChild(linkAppAdmin);
+
+      // page de consultation d'une caserne
+      let linkconsulcaserne = createHTMLElement('a', 'no-style-link');
+      linkconsulcaserne.href = '/consulcaserne';
+      let buttonconsulcaserne = createHTMLElement('div', 'buttonconsulcaserne');
+      buttonconsulcaserne.textContent = 'Consulter une caserne';
+      linkconsulcaserne.appendChild(buttonconsulcaserne);
+      subcontainerOfficier.appendChild(linkconsulcaserne);
+
       subContainer.appendChild(subcontainerOfficier)
     }
     Container.appendChild(subContainer);

@@ -193,15 +193,16 @@ function changeInscription(incripted) {
 }
 
 async function fetchData(dataToSend) {
-    await fetch(adressAPI + 'updateUserCard', {
+    await fetch(adressAPI + 'updateCharacterCard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(dataToSend),
     }).catch(error => {
-        console.error('Erreur lors du fetch :', error);
+        console.error('Erreur lors de la récupération des données:', error);
     });
 
     window.location.href = '/characterCard';
 }
+

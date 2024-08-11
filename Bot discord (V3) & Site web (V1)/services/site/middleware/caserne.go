@@ -119,6 +119,10 @@ func MAJCaserne(r *http.Request, userID string, database *sql.DB) {
 	err := json.NewDecoder(r.Body).Decode(&newCaserne)
 	CheckErr("Erreur de décodage JSON MAJCaserne", err)
 
+	if userID == "0" {
+		userID = newCaserne.Userid
+	}
+
 	var setConditionslevel, setConditionsmaitrise []string // Liste des colonnes à set
 	var updateLevel []interface{}                          // Liste des valeurs des colonnes Caserne
 	var updateMaitrise []interface{}                       // Liste des valeurs des colonnes CaserneMaitrise
@@ -149,6 +153,7 @@ func MAJCaserne(r *http.Request, userID string, database *sql.DB) {
 
 	// mise à jour du level
 	if len(setConditionslevel) > 0 {
+		checkbeforeupdatecaserne(userID, database)
 		// Mise à jours de la Caserne
 		query := "UPDATE Caserne SET " + strings.Join(setConditionslevel, ", ") + " WHERE User_ID = ?"
 		stmt, err := database.Prepare(query)
@@ -159,11 +164,38 @@ func MAJCaserne(r *http.Request, userID string, database *sql.DB) {
 
 	// mise à jour de la maitrise
 	if len(setConditionsmaitrise) > 0 {
+		checkbeforeupdateMaitrise(userID, database)
 		// Mise à jours de la CaserneMaitrise
 		queryMaitrise := "UPDATE CaserneMaitrise SET " + strings.Join(setConditionsmaitrise, ", ") + " WHERE User_ID = ?"
 		stmtMaitrise, err := database.Prepare(queryMaitrise)
 		CheckErr("Requete db MAJCaserne CaserneMaitrise :", err)
 		updateMaitrise = append(updateMaitrise, userID)
 		stmtMaitrise.Exec(updateMaitrise...)
+	}
+}
+
+func checkbeforeupdatecaserne(userID string, database *sql.DB) {
+	stmt, err := database.Prepare("SELECT ID FROM Caserne WHERE User_ID = ?")
+	CheckErr("DB prépare checkbeforeupdatecaserne", err)
+	id := 0
+	stmt.QueryRow(userID).Scan(&id)
+	CheckErr("Requete DB checkbeforeupdatecaserne", err)
+	if id == 0 {
+		insert, err := database.Prepare(`INSERT INTO Caserne(User_ID) VALUES(?);`)
+		CheckErr("1- INSERT checkbeforeupdatecaserne ", err)
+		insert.Exec(userID)
+	}
+}
+
+func checkbeforeupdateMaitrise(userID string, database *sql.DB) {
+	stmt, err := database.Prepare("SELECT ID FROM CaserneMaitrise WHERE User_ID = ?")
+	CheckErr("DB prépare checkbeforeupdateMaitrise", err)
+	id := 0
+	stmt.QueryRow(userID).Scan(&id)
+	CheckErr("Requete DB checkbeforeupdateMaitrise", err)
+	if id == 0 {
+		insert, err := database.Prepare(`INSERT INTO CaserneMaitrise(User_ID) VALUES(?);`)
+		CheckErr("1- INSERT checkbeforeupdateMaitrise ", err)
+		insert.Exec(userID)
 	}
 }

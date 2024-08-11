@@ -502,35 +502,32 @@ async function createExistGroupe(data, userIngroup) {
 
                 MAJlistUserSelect();
 
-                if (selectunit1 != undefined) {
-                    selectunit1.style.visibility = 'hidden';
-                    selectunit1.value = "";
-                    selectunit1.innerHTML = "";
-                    selectunit1.id = 'unit1';
-                    if (selectunit2 != undefined) {
-                        selectunit2.style.visibility = 'hidden';
-                        selectunit2.value = "";
-                        selectunit2.innerHTML = "";
-                        selectunit2.id = 'unit2';
-                        if (selectunit3 != undefined) {
-                            selectunit3.style.visibility = 'hidden';
-                            selectunit3.value = "";
-                            selectunit3.innerHTML = "";
-                            selectunit3.id = 'unit3';
-                            if (selectunit4 != undefined) {
-                                selectunit4.style.visibility = 'hidden';
-                                selectunit4.value = "";
-                                selectunit4.innerHTML = "";
-                                selectunit4.id = 'unit4';
-                            }
-                        }
-                    }
-                }
                 influenceUnit.id = 'influUnit';
                 influenceUnit.textContent = "";
                 intermediairy.textContent = "";
                 influenceplayer.id = 'influPlayer';
                 influenceplayer.textContent = "";
+
+                if (selectunit1 != undefined) {
+                    selectunit1.value = "";
+                    selectunit1.innerHTML = "";
+                    selectunit1.id = 'unit1';
+                }
+                if (selectunit2 != undefined) {
+                    selectunit2.value = "";
+                    selectunit2.innerHTML = "";
+                    selectunit2.id = 'unit2';
+                }
+                if (selectunit3 != undefined) {
+                    selectunit3.value = "";
+                    selectunit3.innerHTML = "";
+                    selectunit3.id = 'unit3';
+                }
+                if (selectunit4 != undefined) {
+                    selectunit4.value = "";
+                    selectunit4.innerHTML = "";
+                    selectunit4.id = 'unit4';
+                }
 
                 if (userSelected !== "") {
                     // mise à jour des options des selects
@@ -543,17 +540,26 @@ async function createExistGroupe(data, userIngroup) {
                     if (selectunit1 != undefined) {
                         selectunit1.style.visibility = 'visible';
                     }
+                    if (selectunit2 != undefined) {
+                        selectunit2.style.visibility = 'visible';
+                    }
+                    if (selectunit3 != undefined) {
+                        selectunit3.style.visibility = 'visible';
+                    }
+                    if (selectunit4 != undefined) {
+                        selectunit4.style.visibility = 'visible';
+                    }
 
                     for (let j = 0; j < data.ListInscripted.length; j++) {
                         const userInscripted = data.ListInscripted[j];
                         if (userInscripted.Username === userSelected) {
-                            const usernameSansEspaces = userInscripted.Username.replace(/\s/g, '');
-                            influenceUnit.id = 'influUnit' + usernameSansEspaces;
+                            const usernameSansEspaces2 = userInscripted.Username.replace(/\s/g, '');
+                            influenceUnit.id = 'influUnit' + usernameSansEspaces2;
                             influenceUnit.textContent = 0;
                             intermediairy.textContent = '/';
-                            influenceplayer.id = 'influPlayer' + usernameSansEspaces;
+                            influenceplayer.id = 'influPlayer' + usernameSansEspaces2;
                             influenceplayer.textContent = userInscripted.Influence;
-                            createEventSelectUnit(name, influenceplayer, intermediairy, influenceUnit, selectunit1, selectunit2, selectunit3, selectunit4, userInscripted, usernameSansEspaces)
+                            createEventSelectUnit(name, influenceplayer, intermediairy, influenceUnit, selectunit1, selectunit2, selectunit3, selectunit4, userInscripted, usernameSansEspaces2)
                             break;
                         }
                     }
@@ -566,6 +572,8 @@ async function createExistGroupe(data, userIngroup) {
     }
 
     creategroup.appendChild(divGroup);
+
+    // Mise à jour des influences initial
     for (let i = 0; i < userIngroup.length; i++) {
         let currentUser = userIngroup[i];
         if (currentUser != undefined && currentUser != null) {
@@ -612,18 +620,36 @@ function insertSelectUnit(selectunit, caserne, nameUnit, optionUser) {
     // groupe pour l'affichage des selects
     let optgroupOther = document.createElement('optgroup');
     optgroupOther.label = 'Option de gestion';
-    let optgroupT5 = document.createElement('optgroup');
-    optgroupT5.label = 'Unité T5';
-    let optgroupT4 = document.createElement('optgroup');
-    optgroupT4.label = 'Unité T4';
-    let optgroupT3 = document.createElement('optgroup');
-    optgroupT3.label = 'Unité T3';
+
+    let optgroupT5Infanterie = document.createElement('optgroup');
+    optgroupT5Infanterie.label = 'T5 - Infanterie';
+    let optgroupT5Distant = document.createElement('optgroup');
+    optgroupT5Distant.label = 'T5 - Distant';
+    let optgroupT5Cav = document.createElement('optgroup');
+    optgroupT5Cav.label = 'T5 - Cavalerie';
+
+    let optgroupT4Infanterie = document.createElement('optgroup');
+    optgroupT4Infanterie.label = 'T4 - Infanterie';
+    let optgroupT4Distant = document.createElement('optgroup');
+    optgroupT4Distant.label = 'T4 - Distant';
+    let optgroupT4Cav = document.createElement('optgroup');
+    optgroupT4Cav.label = 'T4 - Cavalerie';
+
+    let optgroupT3Infanterie = document.createElement('optgroup');
+    optgroupT3Infanterie.label = 'T3 - Infanterie';
+    let optgroupT3Distant = document.createElement('optgroup');
+    optgroupT3Distant.label = 'T3 - Distant';
+    let optgroupT3Cav = document.createElement('optgroup');
+    optgroupT3Cav.label = 'T3 - Cavalerie';
 
     // Légende : 🔴 Unité non maitrisé, 🟡 Unité en cour de maitrise, 🟢 Unité maitrisé
     if (caserne !== null && caserne.length !== undefined) {
 
-        for (let j = 0; j < caserne.length; j++) {
-            const unit = caserne[j];
+        // Trier le tableau jsonData en utilisant la fonction de comparaison
+        const currentCaserne = [...caserne].sort(compareUnitNames);
+
+        for (let j = 0; j < currentCaserne.length; j++) {
+            const unit = currentCaserne[j];
 
             let textoption = "";
             if (unit.Unit_maitrise === '1' && unit.UserMaitrise === '0') {
@@ -645,12 +671,30 @@ function insertSelectUnit(selectunit, caserne, nameUnit, optionUser) {
                 const option = document.createElement('option');
                 option.value = unit.Unit_name;
                 option.text = textoption;
-                if (unit.Unit_tier === 'T5') {
-                    optgroupT5.appendChild(option)
+                if (unit.Unit_tier === 'T5') { // "Infanterie" "Distant" "Cavalerie"
+                    if (unit.Unit_type === 'Infanterie') {
+                        optgroupT5Infanterie.appendChild(option);
+                    } else if (unit.Unit_type === 'Distant') {
+                        optgroupT5Distant.appendChild(option);
+                    } else if (unit.Unit_type === 'Cavalerie') {
+                        optgroupT5Cav.appendChild(option);
+                    }
                 } else if (unit.Unit_tier === 'T4') {
-                    optgroupT4.appendChild(option)
+                    if (unit.Unit_type === 'Infanterie') {
+                        optgroupT4Infanterie.appendChild(option);
+                    } else if (unit.Unit_type === 'Distant') {
+                        optgroupT4Distant.appendChild(option);
+                    } else if (unit.Unit_type === 'Cavalerie') {
+                        optgroupT4Cav.appendChild(option);
+                    }
                 } else if (unit.Unit_tier === 'T3') {
-                    optgroupT3.appendChild(option)
+                    if (unit.Unit_type === 'Infanterie') {
+                        optgroupT3Infanterie.appendChild(option);
+                    } else if (unit.Unit_type === 'Distant') {
+                        optgroupT3Distant.appendChild(option);
+                    } else if (unit.Unit_type === 'Cavalerie') {
+                        optgroupT3Cav.appendChild(option);
+                    }
                 }
             }
 
@@ -683,9 +727,29 @@ function insertSelectUnit(selectunit, caserne, nameUnit, optionUser) {
     }
 
     selectunit.appendChild(optgroupOther);
-    selectunit.appendChild(optgroupT5);
-    selectunit.appendChild(optgroupT4);
-    selectunit.appendChild(optgroupT3);
+    // unit Infanterie
+    selectunit.appendChild(optgroupT5Infanterie);
+    selectunit.appendChild(optgroupT5Distant);
+    selectunit.appendChild(optgroupT5Cav);
+    // unit Distant
+    selectunit.appendChild(optgroupT4Infanterie);
+    selectunit.appendChild(optgroupT4Distant);
+    selectunit.appendChild(optgroupT4Cav);
+    // unit Cav
+    selectunit.appendChild(optgroupT3Infanterie);
+    selectunit.appendChild(optgroupT3Distant);
+    selectunit.appendChild(optgroupT3Cav);
+
+}
+
+function compareUnitNames(a, b) {
+    if (a.Unit_name < b.Unit_name) {
+        return -1;
+    }
+    if (a.Unit_name > b.Unit_name) {
+        return 1;
+    }
+    return 0;
 }
 
 // *************** Option "not exist group" ***************
@@ -877,35 +941,32 @@ function createNewline(divName, data, influenceplayer, intermediairy, influenceU
         const userSelected = divName.value;
         MAJlistUserSelect();
 
-        if (selectunit1 != undefined) {
-            selectunit1.style.visibility = 'hidden';
-            selectunit1.value = "";
-            selectunit1.innerHTML = "";
-            selectunit1.id = 'unit1';
-            if (selectunit2 != undefined) {
-                selectunit2.style.visibility = 'hidden';
-                selectunit2.value = "";
-                selectunit2.innerHTML = "";
-                selectunit2.id = 'unit2';
-                if (selectunit3 != undefined) {
-                    selectunit3.style.visibility = 'hidden';
-                    selectunit3.value = "";
-                    selectunit3.innerHTML = "";
-                    selectunit3.id = 'unit3';
-                    if (selectunit4 != undefined) {
-                        selectunit4.style.visibility = 'hidden';
-                        selectunit4.value = "";
-                        selectunit4.innerHTML = "";
-                        selectunit4.id = 'unit4';
-                    }
-                }
-            }
-        }
         influenceUnit.id = 'influUnit';
         influenceUnit.textContent = "";
         intermediairy.textContent = "";
         influenceUnit.id = 'influPlayer';
         influenceplayer.textContent = "";
+
+        if (selectunit1 != undefined) {
+            selectunit1.value = "";
+            selectunit1.innerHTML = "";
+            selectunit1.id = 'unit1';
+        }
+        if (selectunit2 != undefined) {
+            selectunit2.value = "";
+            selectunit2.innerHTML = "";
+            selectunit2.id = 'unit2';
+        }
+        if (selectunit3 != undefined) {
+            selectunit3.value = "";
+            selectunit3.innerHTML = "";
+            selectunit3.id = 'unit3';
+        }
+        if (selectunit4 != undefined) {
+            selectunit4.value = "";
+            selectunit4.innerHTML = "";
+            selectunit4.id = 'unit4';
+        }
 
         if (divName.value !== "") {
             listUserSelect.push(userSelected);
@@ -945,6 +1006,9 @@ function createNewline(divName, data, influenceplayer, intermediairy, influenceU
                         updateSelectUnit(data, selectunit1, selectunit2, selectunit3, selectunit4, userSelected);
                         selectunit1.value = "";
                         selectunit1.style.visibility = 'visible';
+                        selectunit2.style.visibility = 'visible';
+                        selectunit3.style.visibility = 'visible';
+                        selectunit4.style.visibility = 'visible';
                         influenceUnit.id = 'influUnit' + usernameSansEspaces;
                         influenceUnit.textContent = 0;
                         intermediairy.textContent = '/';
@@ -957,22 +1021,36 @@ function createNewline(divName, data, influenceplayer, intermediairy, influenceU
                         influenceUnit.textContent = "";
                         selectunit1.value = "";
                         selectunit1.style.visibility = 'hidden';
+                        selectunit2.style.visibility = 'hidden';
+                        selectunit3.style.visibility = 'hidden';
+                        selectunit4.style.visibility = 'hidden';
                     }
                     selectunit2.value = "";
-                    selectunit2.style.visibility = 'hidden';
                     selectunit3.value = "";
-                    selectunit3.style.visibility = 'hidden';
                     selectunit4.value = "";
-                    selectunit4.style.visibility = 'hidden';
                     break;
                 }
             }
+        } else {
+            influenceUnit.id = 'influUnit';
+            influenceUnit.textContent = "";
+            intermediairy.textContent = "";
+            influenceplayer.id = 'influPlayer';
+            influenceplayer.textContent = "";
+            selectunit1.style.visibility = 'hidden';
+            selectunit2.style.visibility = 'hidden';
+            selectunit3.style.visibility = 'hidden';
+            selectunit4.style.visibility = 'hidden';
         }
     });
 }
 
 async function createEventSelectUnit(divName, influenceplayer, intermediairy, influenceUnit, selectunit1, selectunit2, selectunit3, selectunit4, infoUser, usernameSansEspaces) {
     if (divName.value === "") {
+        influenceUnit.textContent = 0;
+        intermediairy.textContent = '/';
+        influenceplayer.textContent = 0;
+
         selectunit1.style.visibility = 'hidden';
         selectunit1.value = "";
         selectunit2.style.visibility = 'hidden';
@@ -981,61 +1059,29 @@ async function createEventSelectUnit(divName, influenceplayer, intermediairy, in
         selectunit3.value = "";
         selectunit4.style.visibility = 'hidden';
         selectunit4.value = "";
-        influenceUnit.textContent = 0;
-        intermediairy.textContent = '/';
-        influenceplayer.textContent = 0;
     } else {
-        selectunit1.style.visibility = 'visible';
-        if (selectunit1.value === "" || selectunit1.value === "Consulter un officier") {
-            selectunit2.style.visibility = 'hidden';
-        }
-        if (selectunit2.value === "" || selectunit2.value === "Consulter un officier") {
-            selectunit3.style.visibility = 'hidden';
-        }
-        if (selectunit3.value === "" || selectunit3.value === "Consulter un officier") {
-            selectunit4.style.visibility = 'hidden';
-        }
-        selectunit1.id = 'unit1' + usernameSansEspaces;
-        selectunit2.id = 'unit2' + usernameSansEspaces;
-        selectunit3.id = 'unit3' + usernameSansEspaces;
-        selectunit4.id = 'unit4' + usernameSansEspaces;
         influenceUnit.id = 'influUnit' + usernameSansEspaces;
         influenceplayer.id = 'influPlayer' + usernameSansEspaces;
+
+        selectunit1.style.visibility = 'visible';
+        selectunit1.id = 'unit1' + usernameSansEspaces;
+        selectunit2.style.visibility = 'visible';
+        selectunit2.id = 'unit2' + usernameSansEspaces;
+        selectunit4.style.visibility = 'visible';
+        selectunit3.id = 'unit3' + usernameSansEspaces;
+        selectunit2.style.visibility = 'visible';
+        selectunit4.id = 'unit4' + usernameSansEspaces;
     }
 
     const selectunit1EventListener = function () {
-        if (selectunit1.value === "" || selectunit1.value === "Consulter un officier") {
-            selectunit2.style.visibility = 'hidden';
-            selectunit2.value = "";
-            selectunit3.style.visibility = 'hidden';
-            selectunit3.value = "";
-            selectunit4.style.visibility = 'hidden';
-            selectunit4.value = "";
-        } else {
-            selectunit2.style.visibility = 'visible';
-        }
         changeInfluUnit(infoUser.UserCaserne, usernameSansEspaces);
     };
 
     const selectunit2EventListener = function () {
-        if (selectunit2.value === "" || selectunit2.value === "Consulter un officier") {
-            selectunit3.style.visibility = 'hidden';
-            selectunit3.value = "";
-            selectunit4.style.visibility = 'hidden';
-            selectunit4.value = "";
-        } else {
-            selectunit3.style.visibility = 'visible';
-        }
         changeInfluUnit(infoUser.UserCaserne, usernameSansEspaces);
     };
 
     const selectunit3EventListener = function () {
-        if (selectunit3.value === "" || selectunit3.value === "Consulter un officier") {
-            selectunit4.style.visibility = 'hidden';
-            selectunit4.value = "";
-        } else {
-            selectunit4.style.visibility = 'visible';
-        }
         changeInfluUnit(infoUser.UserCaserne, usernameSansEspaces);
     };
 
@@ -1109,7 +1155,6 @@ function changeInfluUnit(UserCaserne, username) {
         }
     }
 
-    // setTimeout(() => {
     let divInfluenceUnit = document.getElementById('influUnit' + username);
     divInfluenceUnit.textContent = newValue;
     const divInfluenceplayer = document.getElementById('influPlayer' + username);
@@ -1121,7 +1166,6 @@ function changeInfluUnit(UserCaserne, username) {
     }
 
     optionSelectUnit(username, UserCaserne, influenceplayer, newValue);
-    // }, 200);
 }
 
 function optionSelectUnit(username, UserCaserne, influenceplayer, influenceAllUnitSelected) {
@@ -1291,3 +1335,4 @@ function groupType() {
 
     return groupType
 }
+
